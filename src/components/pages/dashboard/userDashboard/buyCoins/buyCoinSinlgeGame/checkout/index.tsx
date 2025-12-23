@@ -7,10 +7,10 @@ import GoldCoinIcon from '@/icons/GoldCoinIcon';
 import { useDepositMutation } from '@/services/transaction';
 import { showToast, ToastVariant } from '@/slice/toastSlice';
 import { Box, Button } from '@mui/material';
-import { BitcoinRefresh, Check, TickCircle } from '@wandersonalwes/iconsax-react';
+import { BitcoinRefresh, TickCircle } from '@wandersonalwes/iconsax-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import React from 'react'
+import React from 'react';
 
 type PaymentModeProps = "crypto" | "idem"
 export default function CheckoutPage({ amount, slug, bonus }: {
@@ -89,7 +89,7 @@ export default function CheckoutPage({ amount, slug, bonus }: {
                                     </div>
                                 </GlassWrapper>
                             </div>
-                            {/* <div className="col-span-1">
+                            <div className="col-span-1">
                                 <GlassWrapper>
                                     <div className="py-5 px-4 flex justify-between items-center cursor-pointer" onClick={() => setCurrentPaymentMode("idem")}>
                                         <span className="text-[14px] flex items-center justify-start gap-2"><BitcoinRefresh />IDEM</span>
@@ -97,7 +97,7 @@ export default function CheckoutPage({ amount, slug, bonus }: {
 
                                     </div>
                                 </GlassWrapper>
-                            </div> */}
+                            </div>
                         </div>
 
                         <Button type='submit' variant='contained' color='primary' className='!mt-3' onClick={async () => {

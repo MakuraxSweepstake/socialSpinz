@@ -1,14 +1,15 @@
 import Avatar from '@/components/atom/Avatar';
-import { Transitions } from '@/components/molecules/Transition';
 import { useAppDispatch, useAppSelector } from '@/hooks/hook';
 import { PATH } from '@/routes/PATH';
+import { useLogoutMutation } from '@/services/authApi';
 import { clearTokens } from '@/slice/authSlice';
-import { Box, Button, ButtonBase, ClickAwayListener, Fade, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Popper, Stack, Typography } from '@mui/material'
+import { showToast, ToastVariant } from '@/slice/toastSlice';
+import { Box, ClickAwayListener, Fade, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Popper } from '@mui/material';
+import { ArrowDown2, Coin, Logout, MoneySend, Profile, Wallet2 } from "@wandersonalwes/iconsax-react";
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 const avataur1 = '/assets/images/avatar-6.png';
-import { ArrowDown2, ArrowUp2, Coin, Logout, MoneySend, Profile, Wallet2 } from "@wandersonalwes/iconsax-react";
 
 
 export default function ProfileBlock() {
@@ -34,10 +35,30 @@ export default function ProfileBlock() {
         setOpen(false);
     }, [pathname, search])
 
-    const handleLogout = (e: React.MouseEvent) => {
-        router.replace(PATH.AUTH.LOGIN.ROOT);
+    const [logout] = useLogoutMutation();
+    const handleLogout = async (e: React.MouseEvent) => {
         e.preventDefault();
-        dispatch(clearTokens());
+
+        try {
+            await logout({}).unwrap();
+            dispatch(clearTokens());
+            showToast({
+                message: "Logout successful.",
+                variant: ToastVariant.SUCCESS,
+            })
+        }
+        catch (err) {
+            console.error("Logout failed:", err);
+            dispatch(
+                showToast({
+                    message: "Logout failed. Please try again.",
+                    variant: ToastVariant.ERROR,
+                })
+            )
+        }
+        finally {
+            router.replace(PATH.AUTH.LOGIN.ROOT);
+        }
     };
     const menuItems = [
         {

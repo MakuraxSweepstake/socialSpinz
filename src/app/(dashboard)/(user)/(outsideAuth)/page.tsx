@@ -1,14 +1,11 @@
+import GlassWrapper from "@/components/molecules/GlassWrapper";
 import Dashboard from "@/components/pages/dashboard";
 import UspSlider from "@/components/pages/dashboard/UspSlider";
-import ProtectedLink from "@/routes/ProtectedLink";
 import { getAllGames, getSubGames, getUsp } from "@/serverApi/game";
 import { getBanners, getSubBanners } from "@/serverApi/pages";
 import Image from "next/image";
 import Link from "next/link";
 import DashboardProvider from "./DashboardProvider";
-import GlassWrapper from "@/components/molecules/GlassWrapper";
-import { Stack } from "@mui/material";
-import KycBanner from "@/components/pages/dashboard/userDashboard/verifyKyc/KycBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -116,7 +113,7 @@ export default async function Home() {
               {subGames?.data?.map((game: any) => (
                 <Link
                   href={`exclusive-games/${game.id}`}
-                  key={game.name}
+                  key={ game.image_url}
                   className="col-span-1 relative aspect-[1/1]"
                 >
                   <Image

@@ -2,9 +2,9 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hook";
 import { clearTokens, setTokens } from "@/slice/authSlice";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import Cookies from "js-cookie";
 
 function isTokenExpired(token: string): boolean {
     try {
@@ -31,7 +31,7 @@ export default function Private({ children }: { children: React.ReactNode }) {
 
         if (!accessToken || isTokenExpired(accessToken)) {
             dispatch(clearTokens());
-            router.replace("/");
+            // router.replace("/");
             return;
         }
 
@@ -40,9 +40,9 @@ export default function Private({ children }: { children: React.ReactNode }) {
             dispatch(setTokens({ access_token: accessToken, user: user || null }));
         }
 
-        if (!user) {
-            router.replace("/");
-        }
+        // if (!user) {
+        //     router.replace("/");
+        // }
     }, [token, user, dispatch, router]);
 
     if (!user) return null;

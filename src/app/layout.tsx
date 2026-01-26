@@ -9,7 +9,7 @@ import { SeonProvider } from "./SeonProvider";
 import TopLoader from "./TopLoader";
 
 const metadata: Metadata = {
-  title: "Sweepstake",
+  title: "Social Spinz",
   description: "Sweepstake - Online Gaming Platform",
   icons: {
     icon: "/assets/images/logo.png",

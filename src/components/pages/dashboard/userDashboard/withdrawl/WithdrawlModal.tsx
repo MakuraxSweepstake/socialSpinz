@@ -71,7 +71,7 @@ export default function WithdrawlModal({
                 </p>
 
                 <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
-                    <div className="relative">
+                    {/* <div className="relative">
                         <InputLabel htmlFor="photoid_number" className="text-start">Photo ID <span className="text-red-500">*</span></InputLabel>
                         <OutlinedInput
                             name="photoid_number"
@@ -85,7 +85,7 @@ export default function WithdrawlModal({
                             formik.touched.photoid_number && formik.errors.photoid_number ?
                                 <span className="error text-start">{formik.errors.photoid_number || ""}</span> : null
                         }
-                    </div>
+                    </div> */}
                     <div className="relative">
                         <InputLabel htmlFor="wallet_address" className="text-start">Wallet Address <span className="text-red-500">*</span></InputLabel>
                         <div className="relative">

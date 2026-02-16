@@ -1,8 +1,6 @@
-import { setBalance, updateBalancePerProvider } from "@/slice/userBalanceSlice";
 import { GlobalResponse } from "@/types/config";
 import { CredentialsResponseProps } from "@/types/game";
 import { SinlgePlayerResponseProps, WalletProps } from "@/types/player";
-import { UserBalanceResponse } from "@/types/user";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
 
@@ -26,42 +24,6 @@ export const userApi = createApi({
                 body: body
             }),
             invalidatesTags: ['user', "wallet"]
-        }),
-        getUserBalance: builder.query<UserBalanceResponse, void>({
-            query: () => ({
-                url: "/api/get-balance",
-                method: "GET",
-            }),
-
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(setBalance(data?.data));
-                } catch { }
-            },
-
-            providesTags: ['user']
-        }),
-
-        getUserBalanceBySlug: builder.query<{ data: { provider: string; balance: number, flag: string, has_changed_password: boolean } }, { slug: string }>({
-            query: ({ slug }) => ({
-                url: `/api/balance/${slug}`,
-                method: "GET"
-            }),
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(updateBalancePerProvider({ balance: data?.data.balance, provider: arg.slug }));
-                } catch { }
-            },
-            providesTags: ['user']
-        }),
-        getUserGameBalance: builder.query<SinlgePlayerResponseProps, void>({
-            query: () => ({
-                url: "/api/detail/get-balance",
-                method: "GET"
-            }),
-            providesTags: ['user']
         }),
         getUserGameCredentials: builder.query<CredentialsResponseProps, void>({
             query: () => ({
@@ -100,7 +62,6 @@ export const userApi = createApi({
             providesTags: ['user', "wallet"],
         }),
     })
-
 })
 
-export const { useAddUserWalletMutation, useUpdateUserProfileMutation, useGetUserBalanceQuery, useGetUserBalanceBySlugQuery, useGetUserGameBalanceQuery, useGetUserGameCredentialsQuery, useChangeUserGamePasswordMutation, useUpdateUserGamePasswordMutation, useGetGamesPasswordStatusQuery } = userApi;
+export const { useAddUserWalletMutation, useUpdateUserProfileMutation, useGetUserGameCredentialsQuery, useChangeUserGamePasswordMutation, useUpdateUserGamePasswordMutation, useGetGamesPasswordStatusQuery } = userApi;

@@ -3,7 +3,7 @@
 import GlassWrapper from "@/components/molecules/GlassWrapper";
 import { useAppDispatch, useAppSelector } from "@/hooks/hook";
 import TapIcon from "@/icons/Tap";
-import { useChangeUserGamePasswordMutation, useGetUserBalanceBySlugQuery } from "@/services/userApi";
+import { useChangeUserGamePasswordMutation } from "@/services/userApi";
 import { openPasswordDialog } from "@/slice/updatePasswordSlice";
 import { CredentialsProps } from "@/types/game";
 import { CircularProgress } from "@mui/material";
@@ -16,6 +16,7 @@ import BalanceRefresh from "./BalanceRefresh";
 import { CardPasswordField } from "./CardPasswordHandler";
 import CopyToClipboard from "./CopyToClipboard";
 import ResetPasswordDialog from "./ResetPasswordDialog";
+import { useGetUserBalanceBySlugQuery } from "../../../../../services/transaction";
 
 export default function CredentialsCard({ cred }: { cred: CredentialsProps }) {
     const {

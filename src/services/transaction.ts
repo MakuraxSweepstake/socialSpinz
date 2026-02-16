@@ -1,14 +1,52 @@
+import { TransactionStatusProps } from "@/components/pages/dashboard/adminDashboard/transaction/TransactionTable";
+import { setBalance, updateBalancePerProvider } from "@/slice/userBalanceSlice";
+import { QueryParams } from "@/types/config";
+import { SinlgePlayerResponseProps } from "@/types/player";
+import { DepositListProps, DepositProps, DepositResponseProps } from "@/types/transaction";
+import { UserBalanceResponse } from "@/types/user";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
-import { DepositListProps, DepositProps, DepositResponseProps, DepositUrlProps } from "@/types/transaction";
-import { QueryParams } from "@/types/config";
-import { TransactionStatusProps } from "@/components/pages/dashboard/adminDashboard/transaction/TransactionTable";
 
 export const transactionApi = createApi({
     reducerPath: "transactionApi",
     baseQuery: baseQuery,
     tagTypes: ["Deposit", "Withdrawl"],
     endpoints: (builder) => ({
+        getUserBalance: builder.query<UserBalanceResponse, void>({
+            query: () => ({
+                url: "/api/get-balance",
+                method: "GET",
+            }),
+
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(setBalance(data?.data));
+                } catch { }
+            },
+
+            providesTags: ['Deposit', 'Withdrawl']
+        }),
+        getUserBalanceBySlug: builder.query<{ data: { provider: string; balance: number, flag: string, has_changed_password: boolean } }, { slug: string }>({
+            query: ({ slug }) => ({
+                url: `/api/balance/${slug}`,
+                method: "GET"
+            }),
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(updateBalancePerProvider({ balance: data?.data.balance, provider: arg.slug }));
+                } catch { }
+            },
+            providesTags: ['Deposit', 'Withdrawl']
+        }),
+        getUserGameBalance: builder.query<SinlgePlayerResponseProps, void>({
+            query: () => ({
+                url: "/api/detail/get-balance",
+                method: "GET"
+            }),
+            providesTags: ['Deposit', 'Withdrawl']
+        }),
         deposit: builder.mutation<DepositResponseProps, DepositProps>({
             query: ({ id, amount, type }) => ({
                 url: `/api/payment/${id}`,
@@ -84,4 +122,4 @@ export const transactionApi = createApi({
     })
 })
 
-export const { useDepositMutation, useGetAllDepositQuery, useWithdrawlMutation, useGetAllWithdrawlQuery, useGetAllTransactionQuery } = transactionApi;
+export const { useDepositMutation, useGetAllDepositQuery, useWithdrawlMutation, useGetAllWithdrawlQuery, useGetAllTransactionQuery, useGetUserBalanceQuery, useGetUserBalanceBySlugQuery, useGetUserGameBalanceQuery, } = transactionApi;

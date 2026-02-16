@@ -2,7 +2,7 @@
 import { useAppSelector } from '@/hooks/hook'
 import GoldCoinIcon from '@/icons/GoldCoinIcon'
 import SilverCoinIcon from '@/icons/SilverCoinIcon'
-import { useGetUserBalanceQuery } from '@/services/userApi'
+import { useGetUserBalanceQuery } from '@/services/transaction'
 import { UserBalance } from '@/types/user'
 import { Box, ClickAwayListener, Fade, IconButton, Paper, Popper } from '@mui/material'
 import { CloseCircle, Refresh } from '@wandersonalwes/iconsax-react'
@@ -34,7 +34,10 @@ export default function UserCoinCard() {
             }}>
                 <Box
                     ref={goldAnchorRef}
-                    onClick={() => setGoldCoinPopperOpen(!goldCoinPopperOpen)}
+                    onClick={() => {
+                        if (isLoading || isFetching) return;
+                        setGoldCoinPopperOpen(prev => !prev);
+                    }}
                     sx={{
                         background: "#2D2D30",
                         borderRadius: "40px"
@@ -43,7 +46,10 @@ export default function UserCoinCard() {
                 >
                     <GoldCoinIcon />
                     <div className="coins">
-                        <strong className="text-[12px] leading-4 font-[600] text-[#FBA027] block">{newBalance?.gcBalnce || 0}</strong>
+                        {isLoading || isFetching ? <IconButton>
+                            <Refresh size={10} className={isLoading || isFetching ? 'animate-spin' : ''} />
+                        </IconButton> :
+                            <strong className="text-[12px] leading-4 font-[600] text-[#FBA027] block">{newBalance?.gcBalnce || 0}</strong>}
                         <span className="text-[9px] mt-[-2px] hidden md:block">Gold Coins</span>
                     </div>
                 </Box>
@@ -93,7 +99,10 @@ export default function UserCoinCard() {
             }}>
                 <Box
                     ref={sweepsAnchorRef}
-                    onClick={() => setSweepsCoinPopperOpen(!sweepsCoinPopperOpen)}
+                    onClick={() => {
+                        if (isLoading || isFetching) return;
+                        setSweepsCoinPopperOpen(!sweepsCoinPopperOpen)
+                    }}
                     sx={{
                         background: "#2D2D30",
                         borderRadius: "40px"
@@ -102,7 +111,10 @@ export default function UserCoinCard() {
                 >
                     <SilverCoinIcon />
                     <div className="coins">
-                        <strong className="text-[12px] leading-4 font-[600] text-[#93E0D8] block">{sweepsCoin.providers.length ? sweepsCoin.providers.reduce((acc, item) => acc + Number(item.balance), 0) : 0}</strong>
+                        {isLoading || isFetching ? <IconButton>
+                            <Refresh size={10} className={isLoading || isFetching ? 'animate-spin' : ''} />
+                        </IconButton> :
+                            <strong className="text-[12px] leading-4 font-[600] text-[#93E0D8] block">{sweepsCoin.providers.length ? sweepsCoin.providers.reduce((acc, item) => acc + Number(item.balance), 0) : 0}</strong>}
                         <span className="text-[9px] mt-[-2px]  hidden md:block">Sweeps Coins</span>
                     </div>
                 </Box>

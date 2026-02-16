@@ -6,7 +6,7 @@ import ResetPasswordForm from '@/components/pages/auth/resetPassword/ResetPasswo
 import EditUserProfile from '@/components/pages/dashboard/userDashboard/account/profile/editProfile';
 import EditUserWallet from '@/components/pages/dashboard/userDashboard/account/profile/editUserWallet';
 import { useAppSelector } from '@/hooks/hook';
-import { useGetUserGameBalanceQuery } from '@/services/userApi';
+import { useGetUserGameBalanceQuery } from '@/services/transaction';
 import React from 'react';
 
 type profileTabProps = "account_detail" | "wallet_information" | "change_password"

@@ -3,8 +3,8 @@
 import { useAppSelector } from '@/hooks/hook'
 import GoldCoinIcon from '@/icons/GoldCoinIcon'
 import SilverCoinIcon from '@/icons/SilverCoinIcon'
-import { useGetUserBalanceBySlugQuery } from '@/services/userApi'
 import { Box } from '@mui/material'
+import { useGetUserBalanceBySlugQuery } from '../../../../../../../services/transaction'
 
 export default function UserCoin({ slug }: { slug: string }) {
     const { data } = useGetUserBalanceBySlugQuery({ slug });

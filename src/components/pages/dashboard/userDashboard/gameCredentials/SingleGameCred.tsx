@@ -1,5 +1,4 @@
 "use client";
-import { useGetUserBalanceBySlugQuery } from '@/services/userApi';
 import React from 'react'
 import CopyToClipboard from './CopyToClipboard';
 import { CardPasswordField } from './CardPasswordHandler';

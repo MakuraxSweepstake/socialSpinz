@@ -7,7 +7,7 @@ export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: baseQuery,
     endpoints: (builder) => ({
-        registerUser: builder.mutation<{ success: boolean, data: LoginResponse | null, message: string }, RegisterProps>({
+        registerUser: builder.mutation<LoginResponse, RegisterProps>({
             query: ({ email,
                 username,
                 password,
@@ -80,4 +80,4 @@ export const authApi = createApi({
     })
 })
 
-export const { useLoginMutation, useRegisterUserMutation, useSendVerificationLinkAgainMutation, useForgotPasswordMutation, useVerifyOTPMutation, useResetPasswordMutation, useVerifyEmailMutation ,useLogoutMutation} = authApi;
+export const { useLoginMutation, useRegisterUserMutation, useSendVerificationLinkAgainMutation, useForgotPasswordMutation, useVerifyOTPMutation, useResetPasswordMutation, useVerifyEmailMutation, useLogoutMutation } = authApi;

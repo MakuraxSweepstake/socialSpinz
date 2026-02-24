@@ -145,12 +145,18 @@ export default function RegisterPage() {
 
                     dispatch(
                         showToast({
-                            message: response?.data?.message || "User Registerd Successfully",
+                            message: response?.message || "User Registerd Successfully",
                             variant: ToastVariant.SUCCESS,
                             autoTime: true,
                         }),
                     );
-                    router.replace(`${PATH.AUTH.VERIFY_EMAIL.ROOT}?email=${values.emailAddress}`);
+                    console.log("Register response:", response?.data?.redirect_url);
+                    if (response?.data?.redirect_url) {
+                        window.open(response?.data?.redirect_url, '_blank');
+                    }
+                    else {
+                        router.replace(`${PATH.AUTH.VERIFY_EMAIL.ROOT}?email=${values.emailAddress}`);
+                    }
                 }
                 catch (e: any) {
                     dispatch(

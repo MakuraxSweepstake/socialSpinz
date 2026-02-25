@@ -151,12 +151,12 @@ export default function RegisterPage() {
                         }),
                     );
                     console.log("Register response:", response?.data?.redirect_url);
-                    if (response?.data?.redirect_url) {
-                        window.open(response?.data?.redirect_url, '_blank');
-                    }
-                    else {
-                        router.replace(`${PATH.AUTH.VERIFY_EMAIL.ROOT}?email=${values.emailAddress}`);
-                    }
+                    // if (response?.data?.redirect_url) {
+                    //     window.open(response?.data?.redirect_url, '_blank');
+                    // }
+                    // else {
+                    // }
+                    router.replace(`${PATH.AUTH.VERIFY_EMAIL.ROOT}?email=${values.emailAddress}`);
                 }
                 catch (e: any) {
                     dispatch(

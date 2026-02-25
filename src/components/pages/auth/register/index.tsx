@@ -317,7 +317,7 @@ export default function RegisterPage() {
                         {/* Country */}
                         <div className="col-span-2 lg:col-span-3">
                             <div className="input__field">
-                                <InputLabel htmlFor="pob">Place of Birth</InputLabel>
+                                <InputLabel htmlFor="pob" className='required'>Place of Birth <span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
                                     fullWidth
                                     id="pob"

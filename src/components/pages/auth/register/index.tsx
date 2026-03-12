@@ -183,7 +183,7 @@ export default function RegisterPage() {
                 </div>
 
                 <form action="" onSubmit={handleSubmit}>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-x-3 gap-y-5">
+                    <div className="flex flex-col lg:grid  lg:grid-cols-6 gap-x-3 gap-y-4">
                         {/* First Name */}
                         <div className="col-span-3 lg:col-span-3">
                             <div className="input__field">
@@ -221,7 +221,7 @@ export default function RegisterPage() {
                         </div>
 
                         {/* EMAIL */}
-                        <div className="col-span-2 lg:col-span-6">
+                        <div className="col-span-3 lg:col-span-6">
                             <div className="input_field">
                                 <InputLabel htmlFor="emailAddress">Email Address<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -241,7 +241,7 @@ export default function RegisterPage() {
                         </div>
 
                         {/* DISPLAY NAME */}
-                        <div className="col-span-2 lg:col-span-3">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input_field">
                                 <InputLabel htmlFor="displayName">Display Name<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -261,7 +261,7 @@ export default function RegisterPage() {
                         </div>
 
                         {/* Address */}
-                        <div className="col-span-2 lg:col-span-3">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="city">City <span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -354,7 +354,7 @@ export default function RegisterPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-2 lg:col-span-3">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="dob">Date of Birth <span className="text-red-500">*</span></InputLabel>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -415,7 +415,7 @@ export default function RegisterPage() {
                                 </LocalizationProvider>
                             </div>
                         </div>
-                        <div className="col-span-2 lg:col-span-3">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input_field">
                                 <PasswordField
                                     name="password"
@@ -428,7 +428,7 @@ export default function RegisterPage() {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-2 lg:col-span-3">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input_field">
                                 <PasswordField
                                     name="confirmPassword"
@@ -441,7 +441,7 @@ export default function RegisterPage() {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-4">
+                        <div className="col-span-6">
                             <FormControlLabel
                                 control={<Checkbox
                                     checked={values.agree}

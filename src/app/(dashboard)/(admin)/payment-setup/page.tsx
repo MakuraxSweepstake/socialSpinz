@@ -44,7 +44,7 @@ export default function PaymentSetup() {
             catch (e: any) {
                 dispatch(
                     showToast({
-                        message: e.message || "Error Updating Paymnet Setting",
+                        message: e?.data?.message || "Error Updating Paymnet Setting",
                         variant: ToastVariant.ERROR
                     })
                 )

@@ -1,26 +1,26 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import { useAppDispatch } from '@/hooks/hook';
+import { useReadAllNotificationMutation, useReadNotificationMutation } from '@/services/notificationApi';
+import { showToast, ToastVariant } from '@/slice/toastSlice';
+import { Pagination } from '@/types/game';
+import { NotificationProps } from '@/types/notification';
+import { formatDateTime } from '@/utils/formatDateTime';
 import {
     Badge,
     Box,
-    IconButton,
-    Popper,
-    Paper,
     ClickAwayListener,
-    Typography,
+    IconButton,
     List,
     ListItem,
+    Paper,
+    Popper,
+    Typography,
 } from '@mui/material';
 import Fade from '@mui/material/Fade'; // ✅ Import Fade
 import { Notification } from '@wandersonalwes/iconsax-react';
 import Link from 'next/link';
-import { NotificationProps } from '@/types/notification';
-import { Pagination } from '@/types/game';
-import { useReadAllNotificationMutation, useReadNotificationMutation } from '@/services/notificationApi';
-import { useAppDispatch } from '@/hooks/hook';
-import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { formatDateTime } from '@/utils/formatDateTime';
+import { useRef, useState } from 'react';
 
 
 export default function NotificationPage({
@@ -59,7 +59,7 @@ export default function NotificationPage({
             catch (e: any) {
                 dispatch(
                     showToast({
-                        message: e.message || "Unable to read notification",
+                        message: e?.data?.message || "Unable to read notification",
                         variant: ToastVariant.ERROR
                     })
                 )
@@ -73,7 +73,7 @@ export default function NotificationPage({
             catch (e: any) {
                 dispatch(
                     showToast({
-                        message: e.message || "Unable to read notification",
+                        message: e?.data?.message || "Unable to read notification",
                         variant: ToastVariant.ERROR
                     })
                 )

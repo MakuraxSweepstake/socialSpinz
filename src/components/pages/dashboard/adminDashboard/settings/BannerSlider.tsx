@@ -1,22 +1,21 @@
 "use client";
 
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import InputFile from "@/components/atom/InputFile";
+import { useAppDispatch } from "@/hooks/hook";
+import { useGetAllBannerQuery, useUpdateBannerMutation } from "@/services/settingApi";
+import { showToast, ToastVariant } from "@/slice/toastSlice";
 import {
     Button,
+    FormControlLabel,
+    IconButton,
     InputLabel,
     OutlinedInput,
-    IconButton,
-    FormControlLabel,
-    Typography,
-    Switch,
+    Switch
 } from "@mui/material";
-import InputFile from "@/components/atom/InputFile";
 import { CloseCircle } from "@wandersonalwes/iconsax-react";
-import { useAppDispatch } from "@/hooks/hook";
-import { showToast, ToastVariant } from "@/slice/toastSlice";
-import { useGetAllBannerQuery, useUpdateBannerMutation } from "@/services/settingApi";
+import { useFormik } from "formik";
+import React from "react";
+import * as Yup from "yup";
 
 const validationSchema = Yup.object({
     banners: Yup.array().of(
@@ -90,7 +89,7 @@ export default function BannerSlider() {
             } catch (e: any) {
                 dispatch(
                     showToast({
-                        message: e.message || "Something went wrong",
+                        message: e?.data?.message || "Something went wrong",
                         variant: ToastVariant.ERROR,
                     })
                 );

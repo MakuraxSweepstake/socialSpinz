@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import {
-    Button,
-    InputLabel,
-    OutlinedInput,
-    FormHelperText,
-    IconButton,
-} from "@mui/material";
 import ReactQuillEditor from "@/components/molecules/ReactQuill";
-import { pageInitialData } from "@/types/page"; // should match your type
-import { CloseCircle } from "@wandersonalwes/iconsax-react";
+import { useAppDispatch } from "@/hooks/hook";
 import { useCreatePageMutation, useGetSinlgePageByIdQuery, useUpdatePageByIdMutation } from "@/services/pageApi";
 import { showToast, ToastVariant } from "@/slice/toastSlice";
-import { useAppDispatch } from "@/hooks/hook";
+import { pageInitialData } from "@/types/page"; // should match your type
+import {
+    Button,
+    FormHelperText,
+    IconButton,
+    InputLabel,
+    OutlinedInput,
+} from "@mui/material";
+import { CloseCircle } from "@wandersonalwes/iconsax-react";
+import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
 
 export default function AddPageForm({ id }: { id?: string }) {
     const [createPage, { isLoading: creatingPage }
@@ -83,7 +83,7 @@ export default function AddPageForm({ id }: { id?: string }) {
                     console.error("Error submitting form:", e);
                     dispatch(
                         showToast({
-                            message: e.message || "Something went wrong",
+                            message: e?.data?.message || "Something went wrong",
                             variant: ToastVariant.ERROR
                         })
                     );
@@ -103,7 +103,7 @@ export default function AddPageForm({ id }: { id?: string }) {
                     console.error("Error submitting form:", e);
                     dispatch(
                         showToast({
-                            message: e.message || "Something went wrong",
+                            message: e?.data?.message || "Something went wrong",
                             variant: ToastVariant.ERROR
                         })
                     );

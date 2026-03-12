@@ -18,8 +18,9 @@ export interface ProviderInfo {
     id: number;
     name: string;
     provider: string;
-    icon: string; // ✅ added since you’re using coin.icon
-    balance: number | string; // ✅ fix type
+    icon: string;
+    balance: number | string;
+    available?: number;
 }
 
 export interface UserBalance {

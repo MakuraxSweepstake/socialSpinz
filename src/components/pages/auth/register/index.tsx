@@ -93,8 +93,7 @@ const validationSchema = Yup.object().shape({
     first_name: Yup.string().required('First name is required'),
     middle_name: Yup.string(),
     last_name: Yup.string().required('Last name is required'),
-    photoid_number: Yup.string().required('Photo ID is required'),
-    city: Yup.string(),
+    city: Yup.string().required("City is Required"),
     pob: Yup.string(),
     agree: Yup.boolean().required().oneOf([true], 'You must agree to the terms and conditions')
 })
@@ -134,13 +133,13 @@ export default function RegisterPage() {
                         first_name: values.first_name,
                         middle_name: values.middle_name,
                         last_name: values.last_name,
-                        phone: values.phone,
+                        phone: `+1 ${values.phone}`,
                         photoid_number: values.photoid_number,
                         dob: formattedDob,
                         city: values.city,
                         pob: values.pob,
                         agree: values.agree,
-                        device_id: deviceId
+                        device_id: deviceId,
                     }).unwrap();
 
                     dispatch(
@@ -186,7 +185,7 @@ export default function RegisterPage() {
                 <form action="" onSubmit={handleSubmit}>
                     <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-x-3 gap-y-5">
                         {/* First Name */}
-                        <div className="col-span-2 lg:col-span-2">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="first_name">First Name<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -203,26 +202,8 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-                        {/* Middle Name */}
-                        <div className="col-span-2 lg:col-span-2">
-                            <div className="input__field">
-                                <InputLabel htmlFor="middle_name">Middle Name</InputLabel>
-                                <OutlinedInput
-                                    fullWidth
-                                    id="middle_name"
-                                    name="middle_name"
-                                    placeholder="Enter middle name"
-                                    value={values.middle_name}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    sx={formFieldSx}
-                                />
-                                <span className="error">{touched.middle_name && errors.middle_name}</span>
-                            </div>
-                        </div>
-
                         {/* Last Name */}
-                        <div className="col-span-2 lg:col-span-2">
+                        <div className="col-span-3 lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="last_name">Last Name<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -279,27 +260,10 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-
-                        {/* Photo ID */}
-                        <div className="col-span-2 lg:col-span-3">
-                            <div className="input__field">
-                                {/* <InputLabel htmlFor="photoid_number"></InputLabel> */}
-                                <PasswordField
-                                    label='Photo ID'
-                                    name="photoid_number"
-                                    placeholder="Enter photo ID"
-                                    value={values.photoid_number}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
-                                <span className="error">{touched.photoid_number && errors.photoid_number}</span>
-                            </div>
-                        </div>
-
                         {/* Address */}
                         <div className="col-span-2 lg:col-span-3">
                             <div className="input__field">
-                                <InputLabel htmlFor="city">City</InputLabel>
+                                <InputLabel htmlFor="city">City <span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
                                     fullWidth
                                     id="city"
@@ -314,41 +278,36 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-                        {/* Country */}
-                        <div className="col-span-2 lg:col-span-3">
-                            <div className="input__field">
-                                <InputLabel htmlFor="pob" className='required'>Place of Birth <span className="text-red-500">*</span></InputLabel>
-                                <OutlinedInput
-                                    fullWidth
-                                    id="pob"
-                                    name="pob"
-                                    placeholder="Enter Place of Birth"
-                                    value={values.pob}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    sx={formFieldSx}
-                                />
-                                <span className="error">{touched.pob && errors.pob}</span>
-                            </div>
-                        </div>
 
-
-
-                        <div className="col-span-2 lg:col-span-3">
-                            <div className="input__field">
-                                <InputLabel htmlFor="phone">Phone <span className="text-red-500">*</span></InputLabel>
-                                <OutlinedInput
-                                    fullWidth
-                                    id="phone"
-                                    name="phone"
-                                    placeholder="Enter phone number"
-                                    value={values.phone}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
-                                <span className="error">
-                                    {touched.phone && errors.phone ? errors.phone : ""}
-                                </span>
+                        <div className="col-span-3 lg:col-span-3">
+                            <InputLabel htmlFor="phone">Phone <span className="text-red-500">*</span></InputLabel>
+                            <div className="grid grid-cols-12 gap-1 items-end">
+                                <div className="col-span-4 lg:col-span-3">
+                                    <OutlinedInput
+                                        fullWidth
+                                        id="country_code"
+                                        name="country_code"
+                                        placeholder="Enter country_code number"
+                                        value={"+1"}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        disabled
+                                    />
+                                </div>
+                                <div className="input__field col-span-8 lg:col-span-9">
+                                    <OutlinedInput
+                                        fullWidth
+                                        id="phone"
+                                        name="phone"
+                                        placeholder="Enter phone number"
+                                        value={values.phone}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                    />
+                                    <span className="error">
+                                        {touched.phone && errors.phone ? errors.phone : ""}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div className="col-span-2 lg:col-span-3">

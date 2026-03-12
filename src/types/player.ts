@@ -13,6 +13,7 @@ export interface CommonPlayerProps {
     password: string;
     password_confirmation: string;
     role?: string;
+    dob: string;
 }
 export interface PlayerProps extends CommonPlayerProps {
     id?: string;
@@ -36,6 +37,7 @@ export const initialPlayerValues: PlayerProps = {
     password: "",
     password_confirmation: "",
     profile_image: null,
+    dob: ""
 };
 
 type GameInformation = {

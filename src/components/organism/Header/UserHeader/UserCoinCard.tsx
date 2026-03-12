@@ -114,7 +114,7 @@ export default function UserCoinCard() {
                         {isLoading || isFetching ? <IconButton>
                             <Refresh size={10} className={isLoading || isFetching ? 'animate-spin' : ''} />
                         </IconButton> :
-                            <strong className="text-[12px] leading-4 font-[600] text-[#93E0D8] block">{sweepsCoin.providers.length ? sweepsCoin.providers.reduce((acc, item) => acc + Number(item.balance), 0) : 0}</strong>}
+                            <strong className="text-[12px] leading-4 font-[600] text-[#93E0D8] block">{sweepsCoin.providers.length ? sweepsCoin.providers.reduce((acc, item) => acc + Number(item.balance), 0) : "N/A"}</strong>}
                         <span className="text-[9px] mt-[-2px]  hidden md:block">Sweeps Coins</span>
                     </div>
                 </Box>

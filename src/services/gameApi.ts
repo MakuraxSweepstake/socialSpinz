@@ -1,7 +1,7 @@
+import { GlobalResponse } from "@/types/config";
+import { GameItem, GameResponseProps, SingleGameResponse } from "@/types/game";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
-import { GameItem, GameProps, GameResponseProps, SingleGameResponse } from "@/types/game";
-import { GlobalResponse } from "@/types/config";
 
 export const gameApi = createApi({
     reducerPath: "gameApi",
@@ -34,6 +34,14 @@ export const gameApi = createApi({
                         })),
                     ]
                     : [{ type: "Games", id: "LIST" }],
+        }),
+
+        getSingleGameFormUser: builder.query<SingleGameResponse, { id: string | number }>({
+            query: ({ id }) => ({
+                url: `/api/game/${id}`,
+                method: "GET",
+            }),
+            providesTags: (_result, _error, { id }) => [{ type: "Games", id }],
         }),
 
         // 🎮 Get single game by ID
@@ -81,4 +89,5 @@ export const {
     useGetGameByIdQuery,
     useUpdateGameByIdMutation,
     useDeleteGameByIdMutation,
+    useGetSingleGameFormUserQuery
 } = gameApi;

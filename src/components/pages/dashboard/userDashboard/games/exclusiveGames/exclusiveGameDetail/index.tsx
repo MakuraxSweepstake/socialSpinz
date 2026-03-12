@@ -1,17 +1,25 @@
 
+"use client"
 import ScreenShotSlider from "@/components/molecules/Sliders/ScreenShotSlider";
 import CustomLightGallery from "@/components/organism/LightGallery";
 import ProtectedLink from "@/routes/ProtectedLink";
-import { SingleGameResponse } from "@/types/game";
+import { useGetSingleGameFormUserQuery } from "@/services/gameApi";
 import { renderHTML } from "@/utils/RenderHTML";
 import { Box } from "@mui/material";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import GameCredentialsBlock from "./GameCredentialsBlock";
 import GameIframeDialog from "./GameIframeDialog";
 import UserCoin from "./UserCoin";
 
-export default function ExclusiveGameDetail({ game }: { game: SingleGameResponse }) {
+export default function ExclusiveGameDetail() {
 
+    const { id } = useParams();
+    const { data: game } = useGetSingleGameFormUserQuery({ id: Number(id) }, { skip: !id });
+
+    if (!game) {
+        return;
+    }
     return (
         <>
             <section className="detail__banner mb-8">

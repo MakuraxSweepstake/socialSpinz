@@ -278,6 +278,50 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
+                        {/* <div className="input__field">
+                            <InputLabel htmlFor="pob">State <span className="text-red-500">*</span></InputLabel>
+
+                            <Select
+                                fullWidth
+                                id="pob"
+                                name="pob"
+                                displayEmpty
+                                value={formik.values.pob}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                sx={formFieldSx}
+                                renderValue={(selected) =>
+                                    selected === "" ? "Select a State" : selected
+                                }
+                            >
+                                <MenuItem value="">
+                                    <em>Select a State</em>
+                                </MenuItem>
+                                {US_STATES.map((state) => (
+                                    <MenuItem key={state.value} value={state.value}>
+                                        {state.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                            <span className="error">{touched.pob && errors.pob}</span>
+                        </div>
+
+                        <div className="input__field">
+                            <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
+                            <OutlinedInput
+                                fullWidth
+                                id="zip_code"
+                                name="zip_code"
+                                placeholder="Enter zip code"
+                                value={values.zip_code}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <span className="error">
+                                {touched.phone && errors.phone ? errors.phone : ""}
+                            </span>
+                        </div> */}
 
                         <div className="col-span-3 lg:col-span-3">
                             <InputLabel htmlFor="phone">Phone <span className="text-red-500">*</span></InputLabel>

@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { Pagination } from "./game";
 
 
@@ -13,7 +14,9 @@ export interface CommonPlayerProps {
     password: string;
     password_confirmation: string;
     role?: string;
-    dob: string;
+    dob?: string | Dayjs | null;
+    zip_code?: string;
+    pob?: string;
 }
 export interface PlayerProps extends CommonPlayerProps {
     id?: string;

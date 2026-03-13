@@ -11,14 +11,20 @@ export const authApi = createApi({
             query: ({ email,
                 username,
                 password,
-                password_confirmation, first_name, middle_name, last_name, phone, photoid_number, dob, city, pob, agree, device_id }) => ({
+                password_confirmation, first_name, middle_name, last_name, phone, photoid_number, dob, city, pob, agree, device_id, state, zip_code, postal_code, ssn }) => ({
                     url: `/api/auth/register`,
                     method: "POST",
                     body: {
                         email,
                         username,
                         password,
-                        password_confirmation, first_name, middle_name, last_name, phone, photoid_number, dob, city, pob, agree, device_id
+                        password_confirmation,
+                        first_name,
+                        middle_name,
+                        last_name,
+                        phone,
+                        photoid_number,
+                        dob, city, pob, agree, device_id, state, zip_code, postal_code, ssn
                     },
                 }),
 

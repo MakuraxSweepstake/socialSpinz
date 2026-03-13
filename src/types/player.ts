@@ -17,6 +17,9 @@ export interface CommonPlayerProps {
     dob?: string | Dayjs | null;
     zip_code?: string;
     pob?: string;
+    state?: string;
+    postal_code: string;
+    ssn: string;
 }
 export interface PlayerProps extends CommonPlayerProps {
     id?: string;
@@ -40,7 +43,9 @@ export const initialPlayerValues: PlayerProps = {
     password: "",
     password_confirmation: "",
     profile_image: null,
-    dob: ""
+    dob: "",
+    postal_code: "",
+    ssn: "",
 };
 
 type GameInformation = {

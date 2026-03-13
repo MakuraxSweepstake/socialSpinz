@@ -21,7 +21,9 @@ export const PlayerValidationSchema = (isEdit: boolean) => Yup.object().shape({
     address: Yup.string().required("Address is required"),
     city: Yup.string().required("City is required"),
     zip_code: Yup.string().required("Zip code is required"),
-    pob: Yup.string().required("State is required"),
+    state: Yup.string().required("State is required"),
+    postal_code: Yup.string().required("Zip code is required"),
+    ssn: Yup.number().required("State is required").max(4, "Enter last 4 of SSN"),
     phone: Yup.string()
         .matches(/^\+?\d{7,15}$/, "Invalid phone number")
         .required("Phone is required"),
@@ -71,6 +73,9 @@ export default function AddPlayerPage({ id }: { id?: string }) {
             dob: data?.data.dob || null as Dayjs | null,
             zip_code: data?.data.zip_code || "",
             pob: data?.data.pob || "",
+            state: data?.data?.state,
+            postal_code: data?.data?.postal_code || "",
+            ssn: data?.data?.ssn || "",
         } : initialPlayerValues,
         validationSchema: PlayerValidationSchema(!!id),
         enableReinitialize: true,

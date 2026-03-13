@@ -1,8 +1,9 @@
 "use client";
 import InputFile from '@/components/atom/InputFile';
 import PasswordField from '@/components/molecules/PasswordField';
+import { US_STATES } from '@/constants/state';
 import { PlayerProps, SinlgePlayerResponseProps } from '@/types/player';
-import { Button, InputLabel, OutlinedInput } from '@mui/material';
+import { Button, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -185,6 +186,83 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
 
                     <span className="error">
                         {formik.touched.phone && formik.errors.phone ? formik.errors.phone : ""}
+                    </span>
+                </div>
+
+                <div className="input__field">
+                    <InputLabel htmlFor="state">State <span className="text-red-500">*</span></InputLabel>
+
+                    <Select
+                        fullWidth
+                        id="state"
+                        name="state"
+                        displayEmpty
+                        value={formik.values.state}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        sx={formFieldSx}
+                        renderValue={(selected) =>
+                            selected === "" ? "Select a State" : selected
+                        }
+                    >
+                        <MenuItem value="">
+                            <em>Select a State</em>
+                        </MenuItem>
+                        {US_STATES.map((state) => (
+                            <MenuItem key={state.value} value={state.value}>
+                                {state.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+
+                    <span className="error">{formik.touched.pob && formik.errors.pob}</span>
+                </div>
+
+                <div className="input__field">
+                    <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
+                    <OutlinedInput
+                        fullWidth
+                        id="zip_code"
+                        name="zip_code"
+                        placeholder="Enter zip code"
+                        value={formik.values.zip_code}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    <span className="error">
+                        {formik.touched.phone && formik.errors.phone ? formik.errors.phone : ""}
+                    </span>
+                </div>
+
+                <div className="input__field">
+                    <InputLabel htmlFor="postal_code">Postal Code <span className="text-red-500">*</span></InputLabel>
+                    <OutlinedInput
+                        fullWidth
+                        id="postal_code"
+                        name="postal_code"
+                        placeholder="Enter zip code"
+                        value={formik.values.postal_code}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    <span className="error">
+                        {formik.touched.postal_code && formik.errors.postal_code ? formik.errors.postal_code : ""}
+                    </span>
+                </div>
+
+                <div className="input__field">
+                    <InputLabel htmlFor="ssn">SSN<span className="text-red-500"> (last 4 Digit) *</span></InputLabel>
+                    <OutlinedInput
+                        fullWidth
+                        id="ssn"
+                        name="ssn"
+                        placeholder="Enter zip code"
+                        value={formik.values.ssn}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    <span className="error">
+                        {formik.touched.ssn && formik.errors.ssn ? formik.errors.ssn : ""}
                     </span>
                 </div>
 

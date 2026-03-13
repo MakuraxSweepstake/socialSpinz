@@ -2,11 +2,12 @@
 
 import { useSeon } from '@/app/SeonProvider';
 import PasswordField from '@/components/molecules/PasswordField';
+import { US_STATES } from '@/constants/state';
 import { useAppDispatch } from '@/hooks/hook';
 import { PATH } from '@/routes/PATH';
 import { useRegisterUserMutation } from '@/services/authApi';
 import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { Box, Checkbox, FormControlLabel, InputLabel, OutlinedInput } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -91,10 +92,12 @@ const validationSchema = Yup.object().shape({
             return dayjs(value).isBefore(cutoff);
         }),
     first_name: Yup.string().required('First name is required'),
-    middle_name: Yup.string(),
     last_name: Yup.string().required('Last name is required'),
     city: Yup.string().required("City is Required"),
-    pob: Yup.string(),
+    state: Yup.string().required("State is Required"),
+    zip_code: Yup.string().required("Zip Code is Required"),
+    postal_code: Yup.string().required("Postal Code is Required"),
+    ssn: Yup.string().required("SSN is Required"),
     agree: Yup.boolean().required().oneOf([true], 'You must agree to the terms and conditions')
 })
 
@@ -115,7 +118,11 @@ export default function RegisterPage() {
         dob: null as Dayjs | null,
         city: '',
         pob: '',
-        agree: true
+        agree: true,
+        state: "",
+        zip_code: "",
+        postal_code: "",
+        ssn: ""
     }
     const { deviceId, loading } = useSeon();
     const { handleSubmit, handleBlur, handleChange, errors, dirty, values, touched, setFieldValue, setFieldTouched } = useFormik(
@@ -137,9 +144,13 @@ export default function RegisterPage() {
                         photoid_number: values.photoid_number,
                         dob: formattedDob,
                         city: values.city,
+                        state: values.state,
+                        zip_code: values.zip_code,
                         pob: values.pob,
                         agree: values.agree,
                         device_id: deviceId,
+                        postal_code: values.postal_code,
+                        ssn: values.ssn
                     }).unwrap();
 
                     dispatch(
@@ -185,7 +196,7 @@ export default function RegisterPage() {
                 <form action="" onSubmit={handleSubmit}>
                     <div className="flex flex-col lg:grid  lg:grid-cols-6 gap-x-3 gap-y-4">
                         {/* First Name */}
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="first_name">First Name<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -203,7 +214,7 @@ export default function RegisterPage() {
                         </div>
 
                         {/* Last Name */}
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="last_name">Last Name<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -221,7 +232,7 @@ export default function RegisterPage() {
                         </div>
 
                         {/* EMAIL */}
-                        <div className="col-span-3 lg:col-span-6">
+                        <div className="lg:col-span-6">
                             <div className="input_field">
                                 <InputLabel htmlFor="emailAddress">Email Address<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -241,7 +252,7 @@ export default function RegisterPage() {
                         </div>
 
                         {/* DISPLAY NAME */}
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <div className="input_field">
                                 <InputLabel htmlFor="displayName">Display Name<span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -260,8 +271,8 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-                        {/* Address */}
-                        <div className="col-span-3 lg:col-span-3">
+                        {/* City */}
+                        <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="city">City <span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
@@ -278,52 +289,90 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-                        {/* <div className="input__field">
-                            <InputLabel htmlFor="pob">State <span className="text-red-500">*</span></InputLabel>
+                        <div className="lg:col-span-3">
+                            <div className="input__field">
+                                <InputLabel htmlFor="state">State <span className="text-red-500">*</span></InputLabel>
 
-                            <Select
-                                fullWidth
-                                id="pob"
-                                name="pob"
-                                displayEmpty
-                                value={formik.values.pob}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                sx={formFieldSx}
-                                renderValue={(selected) =>
-                                    selected === "" ? "Select a State" : selected
-                                }
-                            >
-                                <MenuItem value="">
-                                    <em>Select a State</em>
-                                </MenuItem>
-                                {US_STATES.map((state) => (
-                                    <MenuItem key={state.value} value={state.value}>
-                                        {state.label}
+                                <Select
+                                    fullWidth
+                                    id="state"
+                                    name="state"
+                                    displayEmpty
+                                    value={values.state}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    sx={formFieldSx}
+                                    renderValue={(selected) =>
+                                        selected === "" ? "Select a State" : selected
+                                    }
+                                >
+                                    <MenuItem value="">
+                                        <em>Select a State</em>
                                     </MenuItem>
-                                ))}
-                            </Select>
+                                    {US_STATES.map((state) => (
+                                        <MenuItem key={state.value} value={state.value}>
+                                            {state.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
 
-                            <span className="error">{touched.pob && errors.pob}</span>
+                                <span className="error">{touched.state && errors.state}</span>
+                            </div>
                         </div>
 
-                        <div className="input__field">
-                            <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
-                            <OutlinedInput
-                                fullWidth
-                                id="zip_code"
-                                name="zip_code"
-                                placeholder="Enter zip code"
-                                value={values.zip_code}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            <span className="error">
-                                {touched.phone && errors.phone ? errors.phone : ""}
-                            </span>
-                        </div> */}
+                        <div className="lg:col-span-3">
+                            <div className="input__field">
+                                <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
+                                <OutlinedInput
+                                    fullWidth
+                                    id="zip_code"
+                                    name="zip_code"
+                                    placeholder="Enter zip code"
+                                    value={values.zip_code}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
+                                <span className="error">
+                                    {touched.zip_code && errors.zip_code ? errors.zip_code : ""}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="lg:col-span-3">
+                            <div className="input__field">
+                                <InputLabel htmlFor="postal_code">Postal Code <span className="text-red-500">*</span></InputLabel>
+                                <OutlinedInput
+                                    fullWidth
+                                    id="postal_code"
+                                    name="postal_code"
+                                    placeholder="Enter zip code"
+                                    value={values.postal_code}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
+                                <span className="error">
+                                    {touched.postal_code && errors.postal_code ? errors.postal_code : ""}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="lg:col-span-3">
+                            <div className="input__field">
+                                <InputLabel htmlFor="ssn">SSN<span className="text-red-500"> (last 4 Digit) *</span></InputLabel>
+                                <OutlinedInput
+                                    fullWidth
+                                    id="ssn"
+                                    name="ssn"
+                                    placeholder="Enter zip code"
+                                    value={values.ssn}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
+                                <span className="error">
+                                    {touched.ssn && errors.ssn ? errors.ssn : ""}
+                                </span>
+                            </div>
+                        </div>
 
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <InputLabel htmlFor="phone">Phone <span className="text-red-500">*</span></InputLabel>
                             <div className="grid grid-cols-12 gap-1 items-end">
                                 <div className="col-span-4 lg:col-span-3">
@@ -354,7 +403,7 @@ export default function RegisterPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="dob">Date of Birth <span className="text-red-500">*</span></InputLabel>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -415,7 +464,7 @@ export default function RegisterPage() {
                                 </LocalizationProvider>
                             </div>
                         </div>
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <div className="input_field">
                                 <PasswordField
                                     name="password"
@@ -428,7 +477,7 @@ export default function RegisterPage() {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-3 lg:col-span-3">
+                        <div className="lg:col-span-3">
                             <div className="input_field">
                                 <PasswordField
                                     name="confirmPassword"

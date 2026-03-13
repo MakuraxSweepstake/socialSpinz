@@ -17,6 +17,10 @@ export interface User {
     address: string;
     city: string
     role: RoleProps;
+    zip_code?: string;
+    state?: string;
+    postal_code: string;
+    ssn: string;
 }
 
 export interface LoginResponse {
@@ -42,4 +46,8 @@ export interface RegisterProps extends LoginProps {
     pob: string;
     agree: boolean;
     device_id?: string;
+    zip_code?: string;
+    state?: string;
+    postal_code: string;
+    ssn: string;
 }

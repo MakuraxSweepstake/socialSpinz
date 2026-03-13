@@ -5,10 +5,10 @@ import { useAppDispatch, useAppSelector } from '@/hooks/hook';
 import { useUpdateUserProfileMutation } from '@/services/userApi';
 import { setTokens } from '@/slice/authSlice';
 import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { initialPlayerValues, PlayerItem, SinlgePlayerResponseProps } from '@/types/player';
+import { initialPlayerValues, PlayerItem } from '@/types/player';
+import { Dayjs } from 'dayjs';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import React from 'react'
 
 export default function EditUserProfile({ id, buttonLabel }: { id: string, buttonLabel?: string; }) {
 
@@ -33,6 +33,12 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
             password: '',
             password_confirmation: '',
             profile_image: null,
+            dob: user.dob || null as Dayjs | null,
+            zip_code: user.zip_code || "",
+            pob: user.pob || "",
+            state: user?.state,
+            postal_code: user?.postal_code || "",
+            ssn: user?.ssn || "",
         } : initialPlayerValues,
         validationSchema: PlayerValidationSchema(!!user?.id),
         enableReinitialize: true,
@@ -48,6 +54,9 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
             if (values.address) formData.append("address", values.address);
             if (values.city) formData.append("city", values.city);
             if (values.phone) formData.append("phone", values.phone);
+            if (values.dob) formData.append("dob", values.dob.toString());
+            if (values.state) formData.append("state", values.state);
+            if (values.zip_code) formData.append("zip_code", values.zip_code);
 
             if (values.profile_image) {
                 if (Array.isArray(values.profile_image)) {
@@ -98,6 +107,11 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
                 wallet_address: user.wallet_address,
                 address: user.address,
                 city: user.city,
+                ssn: user.ssn,
+                dob: user.dob,
+                zip_code: user.zip_code,
+                postal_code: user.postal_code,
+                state: user.state,
                 phone: user.phone || "",
                 password: "",
                 password_confirmation: "",

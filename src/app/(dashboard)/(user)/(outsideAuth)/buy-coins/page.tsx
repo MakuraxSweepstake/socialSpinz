@@ -4,7 +4,7 @@ import BuyCoinGameListPage from '@/components/pages/dashboard/userDashboard/buyC
 import { useGetAllGamesForUserQuery } from '@/services/gameApi';
 import { useGetUserGameBalanceQuery } from '@/services/transaction';
 
-export default async function BuyCoins() {
+export default function BuyCoins() {
     const { data: games } = useGetAllGamesForUserQuery();
     const { data: coins } = useGetUserGameBalanceQuery();
 

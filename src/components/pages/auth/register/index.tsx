@@ -388,7 +388,7 @@ export default function RegisterPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="lg:col-span-3">
+                        <div className="lg:col-span-6">
                             <div className="input__field">
                                 <InputLabel htmlFor="dob">Date of Birth <span className="text-red-500">*</span></InputLabel>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>

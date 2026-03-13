@@ -102,7 +102,7 @@ export default function CheckoutPage({ amount, slug, bonus }: {
                                         amount,
                                         type: currentPaymentMode as PaymentModeProps
                                     }).unwrap();
-                                    router.replace(response?.data?.payment_url)
+                                    window.open(response?.data?.payment_url, "_blank")
                                 }
                                 else if (currentPaymentMode === "idem") {
                                     const response = await getPaymentLink({

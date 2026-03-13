@@ -46,6 +46,7 @@ export default function ProfileBlock() {
                 message: "Logout successful.",
                 variant: ToastVariant.SUCCESS,
             })
+            router.replace("/dashboard");
         }
         catch (err) {
             console.error("Logout failed:", err);

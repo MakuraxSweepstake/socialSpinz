@@ -43,7 +43,7 @@ export default function ExclusiveGameDetail() {
                             </div>
                             <div className="action__group flex  flex-col lg:grid lg:grid-cols-3 gap-2">
 
-                                <UserCoin slug={game?.data?.provider} />
+                                {game && game?.data?.provider ? <UserCoin slug={game?.data?.provider} /> : ""}
 
                                 {game?.data?.provider == "goldcoincity" ? "" :
                                     <Box sx={{

@@ -97,7 +97,9 @@ const validationSchema = Yup.object().shape({
     state: Yup.string().required("State is Required"),
     // zip_code: Yup.string().required("Zip Code is Required"),
     postal_code: Yup.string().required("Postal Code is Required"),
-    ssn: Yup.string().required("SSN is Required"),
+    ssn: Yup.string()
+        .matches(/^\d{4}$/, "SSN must be exactly 4 digits no characters")
+        .required("SSN is Required"),
     agree: Yup.boolean().required().oneOf([true], 'You must agree to the terms and conditions')
 })
 

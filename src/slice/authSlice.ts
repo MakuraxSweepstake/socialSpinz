@@ -1,4 +1,3 @@
-import { RoleProps, User } from "@/types/auth";
 import { PlayerProps } from "@/types/player";
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
@@ -62,6 +61,7 @@ export const authSlice = createSlice({
                 localStorage.removeItem("token");
             }
             Cookies.remove("access_token");
+            Cookies.remove("user");
         },
     }
 })

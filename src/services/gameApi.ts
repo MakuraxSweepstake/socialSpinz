@@ -35,6 +35,22 @@ export const gameApi = createApi({
                     ]
                     : [{ type: "Games", id: "LIST" }],
         }),
+        getAllGamesForUser: builder.query<GameResponseProps, void>({
+            query: () => ({
+                url: "/api/get-games",
+                method: "GET",
+            }),
+            providesTags: (result) =>
+                result?.data?.data
+                    ? [
+                        { type: "Games", id: "LIST" },
+                        ...result.data.data.map((game: GameItem) => ({
+                            type: "Games" as const,
+                            id: game.id,
+                        })),
+                    ]
+                    : [{ type: "Games", id: "LIST" }],
+        }),
 
         getSingleGameFormUser: builder.query<SingleGameResponse, { id: string | number }>({
             query: ({ id }) => ({
@@ -86,6 +102,7 @@ export const gameApi = createApi({
 export const {
     useAddGameMutation,
     useGetAllGamesQuery,
+    useGetAllGamesForUserQuery,
     useGetGameByIdQuery,
     useUpdateGameByIdMutation,
     useDeleteGameByIdMutation,

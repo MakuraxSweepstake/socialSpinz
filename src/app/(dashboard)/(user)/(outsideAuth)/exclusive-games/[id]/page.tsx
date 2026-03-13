@@ -1,5 +1,7 @@
+"use client"
+
 import ExclusiveGameDetail from "@/components/pages/dashboard/userDashboard/games/exclusiveGames/exclusiveGameDetail";
 
-export default async function UserGameDetail() {
+export default function UserGameDetail() {
     return <ExclusiveGameDetail />
 }

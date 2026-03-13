@@ -1,5 +1,4 @@
-import { CredentialsResponseProps, GameResponseProps, SingleGameResponse } from "@/types/game";
-import { cookies } from "next/headers";
+import { GameResponseProps } from "@/types/game";
 import { serverBaseQuery } from "./serverBaseQuery";
 
 export async function getAllGames(): Promise<GameResponseProps> {
@@ -16,34 +15,4 @@ export async function getSupportEmail(): Promise<any> {
 }
 export async function getUsp(): Promise<any> {
     return serverBaseQuery("/api/general/home/usp");
-}
-
-export async function getSingleGame(id: string): Promise<SingleGameResponse> {
-    const cookieStore = await cookies();
-    const access_token = cookieStore.get("access_token")?.value;
-
-    return serverBaseQuery(`/api/game/${id}`, {
-        token: access_token,
-        withAuth: true,
-    });
-}
-
-export async function getUserGameCredentials(): Promise<CredentialsResponseProps> {
-    const cookieStore = await cookies();
-    const access_token = cookieStore.get("access_token")?.value;
-
-    return serverBaseQuery<CredentialsResponseProps>(`/api/credentials`, {
-        token: access_token,
-        withAuth: true,
-    });
-}
-
-export async function getUserGameBalance(): Promise<CredentialsResponseProps> {
-    const cookieStore = await cookies();
-    const access_token = cookieStore.get("access_token")?.value;
-
-    return serverBaseQuery<CredentialsResponseProps>(`/api/detail/get-balance`, {
-        token: access_token,
-        withAuth: true,
-    });
 }

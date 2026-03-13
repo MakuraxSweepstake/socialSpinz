@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import { BannerProps } from "@/types/setting";
-import { Button } from "@mui/material";
 import { renderHTML } from "@/utils/RenderHTML";
+import { Button } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function Dashboard({ slides }: { slides: BannerProps[] }) {
     const [current, setCurrent] = useState(0);
@@ -35,7 +35,7 @@ export default function Dashboard({ slides }: { slides: BannerProps[] }) {
                 >
                     <Image
                         src={slides[current].image_url || ""}
-                        alt={slides[current].name}
+                        alt={slides[current].name || ""}
                         fill
                         className="object-cover z-[-1]"
                     />

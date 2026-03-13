@@ -38,7 +38,7 @@ export default function WithdrawlPage({
     games,
     coins,
 }: {
-    games: GameResponseProps;
+    games?: GameResponseProps;
     coins: any;
 }) {
     const [open, setOpen] = React.useState(false);

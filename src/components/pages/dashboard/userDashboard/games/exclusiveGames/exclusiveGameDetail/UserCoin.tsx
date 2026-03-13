@@ -9,14 +9,16 @@ import { useGetUserBalanceBySlugQuery } from '../../../../../../../services/tran
 export default function UserCoin({ slug }: { slug: string }) {
     const { data } = useGetUserBalanceBySlugQuery({ slug });
     const user = useAppSelector((s) => s ? s.auth.user : "");
-    if (!user) {
-        return "";
-    }
+
 
     const newBalance = useAppSelector((state) => state.userBalanceSlice);
     const providerBalance = newBalance.providerAndBalance.find(
         (item: any) => item.provider === slug
     );
+
+    if (!user) {
+        return "";
+    }
 
     return (
         <Box sx={{

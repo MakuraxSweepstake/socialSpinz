@@ -13,7 +13,7 @@ export default function BuyCoinGameListPage({
     games,
     coins,
 }: {
-    games: GameResponseProps
+    games?: GameResponseProps
     coins: any
 }) {
     const gameInfo = coins?.data?.game_information || {}
@@ -30,7 +30,7 @@ export default function BuyCoinGameListPage({
             </div>
 
             <div className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-                {games.data?.data.map((game) => {
+                {games && games?.data?.data.map((game) => {
                     const info = gameInfo[game.provider.toLowerCase()] || { balance: 0, type: 'sc' }
                     const CoinIcon = info.type === 'gc' ? GoldCoinIcon : SilverCoinIcon
                     console.log(info.has_changed_password)

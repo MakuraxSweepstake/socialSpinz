@@ -18,12 +18,13 @@ export const PlayerValidationSchema = (isEdit: boolean) => Yup.object().shape({
     first_name: Yup.string().required("First name is required"),
     last_name: Yup.string().required("Last name is required"),
     wallet_address: Yup.string().nullable(),
-    address: Yup.string().required("Address is required"),
     city: Yup.string().required("City is required"),
     zip_code: Yup.string().required("Zip code is required"),
     state: Yup.string().required("State is required"),
     postal_code: Yup.string().required("Zip code is required"),
-    ssn: Yup.number().required("State is required").max(4, "Enter last 4 of SSN"),
+    ssn: Yup.string()
+        .required("SSN is required")
+        .matches(/^\d{4}$/, "Enter last 4 digits of SSN"),
     phone: Yup.string()
         .matches(/^\+?\d{7,15}$/, "Invalid phone number")
         .required("Phone is required"),
@@ -75,11 +76,13 @@ export default function AddPlayerPage({ id }: { id?: string }) {
             pob: data?.data.pob || "",
             state: data?.data?.state,
             postal_code: data?.data?.postal_code || "",
-            ssn: data?.data?.ssn || "",
+            ssn: data?.data?.ssn || null,
         } : initialPlayerValues,
         validationSchema: PlayerValidationSchema(!!id),
         enableReinitialize: true,
         onSubmit: async (values) => {
+            const formattedDob = values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : '';
+
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("email", values.email);
@@ -91,7 +94,7 @@ export default function AddPlayerPage({ id }: { id?: string }) {
             if (values.address) formData.append("address", values.address);
             if (values.city) formData.append("city", values.city);
             if (values.phone) formData.append("phone", values.phone);
-            if (values.dob) formData.append("dob", values.dob.toString());
+            if (values.dob) formData.append("dob", formattedDob);
             if (values.zip_code) formData.append("zip_code", values.zip_code);
             if (values.pob) formData.append("pob", values.pob);
             if (values.profile_image) {

@@ -178,9 +178,6 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
-                            <span className="error">
-                                {formik.touched.phone && formik.errors.phone ? formik.errors.phone : ""}
-                            </span>
                         </div>
                     </div>
 
@@ -215,7 +212,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                         ))}
                     </Select>
 
-                    <span className="error">{formik.touched.pob && formik.errors.pob}</span>
+                    <span className="error">{formik.touched.state && formik.errors.state}</span>
                 </div>
 
                 <div className="input__field">
@@ -230,7 +227,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                         onBlur={formik.handleBlur}
                     />
                     <span className="error">
-                        {formik.touched.phone && formik.errors.phone ? formik.errors.phone : ""}
+                        {formik.touched.zip_code && formik.errors.zip_code ? formik.errors.zip_code : ""}
                     </span>
                 </div>
 

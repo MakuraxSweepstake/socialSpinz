@@ -38,7 +38,7 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
             pob: user.pob || "",
             state: user?.state,
             postal_code: user?.postal_code || "",
-            ssn: user?.ssn || "",
+            ssn: user?.ssn || null,
         } : initialPlayerValues,
         validationSchema: PlayerValidationSchema(!!user?.id),
         enableReinitialize: true,
@@ -57,6 +57,8 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
             if (values.dob) formData.append("dob", values.dob.toString());
             if (values.state) formData.append("state", values.state);
             if (values.zip_code) formData.append("zip_code", values.zip_code);
+            if (values.ssn) formData.append("ssn", values.ssn.toString());
+            if (values.postal_code) formData.append("postal_code", values.postal_code);
 
             if (values.profile_image) {
                 if (Array.isArray(values.profile_image)) {
@@ -71,17 +73,17 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
             }
 
             try {
-                const response = await updateUserProfile({ id: user?.id || "", body: formData });
+                const response = await updateUserProfile({ id: user?.id || "", body: formData }).unwrap();
                 dispatch(
                     showToast({
-                        message: response?.data?.message || "Profile Updated Successfully",
+                        message: response?.message || "Profile Updated Successfully",
                         variant: ToastVariant.SUCCESS
                     })
                 );
                 dispatch(
                     setTokens({
                         access_token: access_token,
-                        user: response?.data?.data,
+                        user: { ...user, ...response?.data },
                     }),
                 );
             }
@@ -96,6 +98,8 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
         }
     })
 
+    console.log(formik.errors)
+
     const formattedData = user
         ? {
             data: {
@@ -107,7 +111,7 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
                 wallet_address: user.wallet_address,
                 address: user.address,
                 city: user.city,
-                ssn: user.ssn,
+                ssn: user.ssn || null,
                 dob: user.dob,
                 zip_code: user.zip_code,
                 postal_code: user.postal_code,

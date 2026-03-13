@@ -19,7 +19,7 @@ export interface CommonPlayerProps {
     pob?: string;
     state?: string;
     postal_code: string;
-    ssn: string;
+    ssn: number | null;
 }
 export interface PlayerProps extends CommonPlayerProps {
     id?: string;
@@ -45,7 +45,7 @@ export const initialPlayerValues: PlayerProps = {
     profile_image: null,
     dob: "",
     postal_code: "",
-    ssn: "",
+    ssn: null,
 };
 
 type GameInformation = {

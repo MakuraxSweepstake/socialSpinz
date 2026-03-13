@@ -95,7 +95,7 @@ const validationSchema = Yup.object().shape({
     last_name: Yup.string().required('Last name is required'),
     city: Yup.string().required("City is Required"),
     state: Yup.string().required("State is Required"),
-    zip_code: Yup.string().required("Zip Code is Required"),
+    // zip_code: Yup.string().required("Zip Code is Required"),
     postal_code: Yup.string().required("Postal Code is Required"),
     ssn: Yup.string().required("SSN is Required"),
     agree: Yup.boolean().required().oneOf([true], 'You must agree to the terms and conditions')
@@ -181,6 +181,7 @@ export default function RegisterPage() {
         }
     )
 
+    console.log(errors)
     return (
         <>
             <AuthMessageBlock
@@ -322,29 +323,12 @@ export default function RegisterPage() {
 
                         <div className="lg:col-span-3">
                             <div className="input__field">
-                                <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
-                                <OutlinedInput
-                                    fullWidth
-                                    id="zip_code"
-                                    name="zip_code"
-                                    placeholder="Enter zip code"
-                                    value={values.zip_code}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
-                                <span className="error">
-                                    {touched.zip_code && errors.zip_code ? errors.zip_code : ""}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="lg:col-span-3">
-                            <div className="input__field">
                                 <InputLabel htmlFor="postal_code">Postal Code <span className="text-red-500">*</span></InputLabel>
                                 <OutlinedInput
                                     fullWidth
                                     id="postal_code"
                                     name="postal_code"
-                                    placeholder="Enter zip code"
+                                    placeholder="Enter Postal code"
                                     value={values.postal_code}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -354,6 +338,7 @@ export default function RegisterPage() {
                                 </span>
                             </div>
                         </div>
+
                         <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="ssn">SSN<span className="text-red-500"> (last 4 Digit) *</span></InputLabel>
@@ -361,7 +346,7 @@ export default function RegisterPage() {
                                     fullWidth
                                     id="ssn"
                                     name="ssn"
-                                    placeholder="Enter zip code"
+                                    placeholder="Enter Last 4 Digit of SSN"
                                     value={values.ssn}
                                     onChange={handleChange}
                                     onBlur={handleBlur}

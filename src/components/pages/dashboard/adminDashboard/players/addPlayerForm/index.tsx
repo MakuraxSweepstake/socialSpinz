@@ -19,7 +19,7 @@ export const PlayerValidationSchema = (isEdit: boolean) => Yup.object().shape({
     last_name: Yup.string().required("Last name is required"),
     wallet_address: Yup.string().nullable(),
     city: Yup.string().required("City is required"),
-    zip_code: Yup.string().required("Zip code is required"),
+    // zip_code: Yup.string().required("Zip code is required"),
     state: Yup.string().required("State is required"),
     postal_code: Yup.string().required("Zip code is required"),
     ssn: Yup.string()

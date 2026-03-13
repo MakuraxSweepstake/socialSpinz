@@ -215,7 +215,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                     <span className="error">{formik.touched.state && formik.errors.state}</span>
                 </div>
 
-                <div className="input__field">
+                {/* <div className="input__field">
                     <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
                     <OutlinedInput
                         fullWidth
@@ -229,7 +229,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                     <span className="error">
                         {formik.touched.zip_code && formik.errors.zip_code ? formik.errors.zip_code : ""}
                     </span>
-                </div>
+                </div> */}
 
                 <div className="input__field">
                     <InputLabel htmlFor="postal_code">Postal Code <span className="text-red-500">*</span></InputLabel>

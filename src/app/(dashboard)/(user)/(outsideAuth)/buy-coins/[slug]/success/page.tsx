@@ -1,7 +1,6 @@
 "use client"
 
 import GlassWrapper from '@/components/molecules/GlassWrapper'
-import { useAppSelector } from '@/hooks/hook'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -9,10 +8,7 @@ import { useParams } from 'next/navigation'
 export default function PaymentSuccess() {
     const params = useParams();
     const slug = params?.slug as string;
-    const user = useAppSelector((state) => state.auth.user);
-    const localUser = JSON.parse(localStorage.getItem("token") || "");
 
-    console.log("auth data", { user, localUser: localUser, slug });
 
     return (
         <GlassWrapper className="max-w-[520px] mx-auto flex flex-col gap-3 items-center text-center p-6">

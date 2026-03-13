@@ -1,20 +1,19 @@
 'use client';
-import Cookies from 'js-cookie';
-import React from 'react'
-import AuthMessageBlock from '../authMessageBlock'
-import { Box, InputLabel, OutlinedInput } from '@mui/material'
-import { useFormik } from 'formik';
-import Link from 'next/link';
-import * as Yup from 'yup';
-import { PATH } from '@/routes/PATH';
-import { useRouter } from 'next/navigation';
-import { useAppDispatch } from '@/hooks/hook';
-import { useLoginMutation } from '@/services/authApi';
-import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { clearTokens, setTokens } from '@/slice/authSlice';
-import PasswordField from '@/components/molecules/PasswordField';
-import { ArrowLeft } from '@wandersonalwes/iconsax-react';
 import { useSeon } from '@/app/SeonProvider';
+import PasswordField from '@/components/molecules/PasswordField';
+import { useAppDispatch } from '@/hooks/hook';
+import { PATH } from '@/routes/PATH';
+import { useLoginMutation } from '@/services/authApi';
+import { clearTokens, setTokens } from '@/slice/authSlice';
+import { showToast, ToastVariant } from '@/slice/toastSlice';
+import { Box, InputLabel, OutlinedInput } from '@mui/material';
+import { ArrowLeft } from '@wandersonalwes/iconsax-react';
+import { useFormik } from 'formik';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import * as Yup from 'yup';
+import AuthMessageBlock from '../authMessageBlock';
 
 const validationSchema = Yup.object().shape({
     emailAddress: Yup.string()
@@ -74,7 +73,7 @@ export default function LoginPage() {
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: 'Strict',
                     });
-                    router.replace(PATH.DASHBOARD.ROOT);
+                    router.replace("/credentials");
                 }
                 catch (e: any) {
                     dispatch(

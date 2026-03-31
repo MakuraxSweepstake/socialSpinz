@@ -1,11 +1,31 @@
 import { TransactionStatusProps } from "@/components/pages/dashboard/adminDashboard/transaction/TransactionTable";
 import { setBalance, updateBalancePerProvider } from "@/slice/userBalanceSlice";
-import { QueryParams } from "@/types/config";
+import { GlobalResponse, QueryParams } from "@/types/config";
 import { SinlgePlayerResponseProps } from "@/types/player";
-import { DepositListProps, DepositProps, DepositResponseProps } from "@/types/transaction";
+import { DepositListProps, DepositProps, DepositResponseProps, MasspayPaymentFields, MasspayPaymentMethods } from "@/types/transaction";
 import { UserBalanceResponse } from "@/types/user";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
+interface SubmitMassPayRequest {
+    token: string;
+    body: {
+        amount: number;
+        game_provider: string;
+        values?: { token: string; value: string }[];
+    };
+}
+
+interface MassPayFieldsResponse {
+    data: MasspayPaymentFields[];
+    success: boolean;
+    message: string;
+}
+
+interface MassPayMethodsResponse {
+    data: MasspayPaymentMethods[];
+    success: boolean;
+    message: string;
+}
 
 export const transactionApi = createApi({
     reducerPath: "transactionApi",
@@ -119,7 +139,39 @@ export const transactionApi = createApi({
             },
             providesTags: ["Withdrawl", "Deposit"]
         }),
+        getMassPayPaymentMethods: builder.query<MassPayMethodsResponse, void>({
+            query: () => ({
+                url: `/api/payment`,
+                method: "GET"
+            })
+        }),
+        getMassPayPaymentFields: builder.mutation<MassPayFieldsResponse, { token: string }>({
+            query: ({ token }) => ({
+                url: `/api/payment/fields?token=${token}`,
+                method: "GET"
+            })
+        }),
+        submitMassPayPaymentFields: builder.mutation<GlobalResponse, SubmitMassPayRequest>({
+            query: ({ token, body }) => ({
+                url: `/api/payment/fields?token=${token}`,
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["Withdrawl"]
+        }),
     })
 })
 
-export const { useDepositMutation, useGetAllDepositQuery, useWithdrawlMutation, useGetAllWithdrawlQuery, useGetAllTransactionQuery, useGetUserBalanceQuery, useGetUserBalanceBySlugQuery, useGetUserGameBalanceQuery, } = transactionApi;
+export const {
+    useDepositMutation,
+    useGetAllDepositQuery,
+    useWithdrawlMutation,
+    useGetAllWithdrawlQuery,
+    useGetAllTransactionQuery,
+    useGetMassPayPaymentFieldsMutation,
+    useGetMassPayPaymentMethodsQuery,
+    useSubmitMassPayPaymentFieldsMutation,
+    useGetUserBalanceQuery,
+    useGetUserBalanceBySlugQuery,
+    useGetUserGameBalanceQuery,
+} = transactionApi;

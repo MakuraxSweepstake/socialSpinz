@@ -166,9 +166,9 @@ export default function RegisterPage() {
                     if (response?.data?.redirect_url) {
                         window.open(response?.data?.redirect_url, '_blank');
                     }
-                    else {
-                        router.replace(`${PATH.AUTH.VERIFY_EMAIL.ROOT}?email=${values.emailAddress}`);
-                    }
+                    // else {
+                    //     router.replace(`${PATH.AUTH.VERIFY_EMAIL.ROOT}?email=${values.emailAddress}`);
+                    // }
                 }
                 catch (e: any) {
                     dispatch(

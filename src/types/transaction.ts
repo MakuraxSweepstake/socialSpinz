@@ -1,11 +1,17 @@
 import { Pagination } from "./game";
 
 type TransactionStatus = "SUCCESS" | "UNSUCCESSFUL" | "PENDING";
+export type PaymentModeProps = "crypto" | "fortpay";
 
 export interface DepositProps {
     id: string;
     amount: number;
-    type?: "crypto" | "idem"
+    type?: PaymentModeProps;
+    payment_token?: string;
+    bin?: string;
+    exp?: string;
+    number?: string;
+    hash?: string;
 }
 
 export interface DepositUrlProps {
@@ -14,8 +20,8 @@ export interface DepositUrlProps {
     amount: number;
     currency: string;
     payment_url: string;
-    merchant_id:string;
-    
+    merchant_id: string;
+
 }
 
 

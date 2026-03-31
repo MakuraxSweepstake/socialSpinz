@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, CircularProgress, Dialog, DialogContent, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export interface PaymentModalProps {
@@ -14,6 +15,7 @@ export interface PaymentModalProps {
     title?: string;
     maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     height?: number;
+    isRegistrationFlow?: boolean;
 }
 
 export interface PaymentError {
@@ -32,13 +34,14 @@ export default function PaymentModal({
     successRedirectPaths = ['/login', '/success'],
     title = 'Processing Payment',
     maxWidth = 'sm',
-    height = 600
+    height = 600,
+    isRegistrationFlow = false
 }: PaymentModalProps) {
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<PaymentError | null>(null);
     const [hasDetectedSuccess, setHasDetectedSuccess] = useState(false);
-
+    const route = useRouter();
     useEffect(() => {
         if (!isOpen) {
             setIsLoading(true);
@@ -94,11 +97,9 @@ export default function PaymentModal({
 
                 console.log('[PaymentModal] Received message:', event.data);
 
-                // Check for success status
                 const data = event.data;
                 if (!data) return;
 
-                // Support multiple success indicators
                 const isSuccess =
                     data.status === successMessage ||
                     data.status === 'success' ||
@@ -106,6 +107,7 @@ export default function PaymentModal({
                     data.type === `payment:${successMessage}` ||
                     data.result === 'success' ||
                     data.result === successMessage ||
+                    data.verification_status === 'verification.accepted' ||
                     (typeof data === 'string' && (
                         data === successMessage ||
                         data === 'success'
@@ -117,6 +119,9 @@ export default function PaymentModal({
                     setIsLoading(false);
                     onSuccess?.();
                     setTimeout(() => onClose(), 500); // Small delay for animation
+                    if (isRegistrationFlow) {
+                        route.push('/login');
+                    }
                     return;
                 }
 

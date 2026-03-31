@@ -1,6 +1,7 @@
 'use client';
 
 import PasswordField from '@/components/molecules/PasswordField';
+import PaymentModal from '@/components/molecules/PaymentModal';
 import { US_STATES } from '@/constants/state';
 import { useAppDispatch } from '@/hooks/hook';
 import { PATH } from '@/routes/PATH';
@@ -17,7 +18,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import AuthMessageBlock from '../authMessageBlock';
-import PaymentModal from '@/components/molecules/PaymentModal';
 
 const formFieldSx = {
     '& .MuiOutlinedInput-root, & .MuiPickersInputBase-root, & .MuiPickersOutlinedInput-root': {
@@ -512,6 +512,7 @@ export default function RegisterPage() {
                 title="Acuity identity verification"
                 maxWidth="md"
                 height={700}
+                isRegistrationFlow={true}
             />
 
         </>

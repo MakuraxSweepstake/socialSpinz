@@ -284,9 +284,9 @@ export default function PaymentForm({ id, amount, type }: DepositProps & { type:
                     variant="contained"
                     color="primary"
                     className="mt-4!"
-                    disabled={isLoading || loadingToken}
+                    disabled={isLoading}
                 >
-                    {isLoading || loadingToken ? 'Processing Payment…' : 'Proceed Payment'}
+                    {isLoading  ? 'Processing Payment…' : 'Proceed Payment'}
                 </Button>
             </form>
 

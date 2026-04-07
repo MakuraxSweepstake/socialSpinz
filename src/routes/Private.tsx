@@ -31,11 +31,9 @@ export default function Private({ children }: { children: React.ReactNode }) {
 
         if (!accessToken || isTokenExpired(accessToken)) {
             dispatch(clearTokens());
-            // router.replace("/");
             return;
         }
 
-        // ✅ optional: if Redux was empty, rehydrate it from cookie
         if (!token && accessToken) {
             dispatch(setTokens({ access_token: accessToken, user: user || null }));
         }

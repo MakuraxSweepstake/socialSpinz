@@ -156,7 +156,6 @@ export default function PaymentForm({ id, amount, type }: DepositProps & { type:
 
                     <div className="form-group">
                         <InputLabel htmlFor="name">Last Name</InputLabel>
-
                         <OutlinedInput
                             id="lname"
                             name="lname"

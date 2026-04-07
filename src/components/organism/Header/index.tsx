@@ -1,15 +1,14 @@
 "use client";
 import { DRAWER_WIDTH } from '@/config';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+import { useAppSelector } from '@/hooks/hook';
+import { useMediaQuery } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import React from 'react'
+import Toolbar from '@mui/material/Toolbar';
 import { HambergerMenu } from '@wandersonalwes/iconsax-react';
 import AdminHeader from './AdminHeader';
 import UserHeader from './UserHeader';
-import { OutlinedInput, useMediaQuery } from '@mui/material';
-import { useAppSelector } from '@/hooks/hook';
 
 
 interface AppBarProps extends MuiAppBarProps {
@@ -107,10 +106,10 @@ export default function Header({ open, handleDrawerOpen, handleMobileMenuToggle 
                     <HambergerMenu className='!text-para-light' />
                 </IconButton>}
                 {
-                    user?.role && user.role.toUpperCase() === 'ADMIN' ? (
-                        <AdminHeader />
-                    ) : (
+                    !user || user?.role && user.role.toUpperCase() === 'USER' ? (
                         <UserHeader />
+                    ) : (
+                        <AdminHeader />
                     )
                 }
             </Toolbar>

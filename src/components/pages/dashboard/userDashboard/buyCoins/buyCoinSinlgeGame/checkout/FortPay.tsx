@@ -126,7 +126,7 @@ export default function PaymentForm({ id, amount, type }: DepositProps & { type:
         <>
             <Script
                 src="https://secure.fppgateway.com/token/Collect.js"
-                data-tokenization-key="DQB36T-b7936z-BtT2YM-EY3h37"
+                data-tokenization-key="Y2M8bJ-s9wqvC-hfQYz7-kB6YY5"
                 strategy="afterInteractive"
                 onReady={handleCollectJSLoad}
             />

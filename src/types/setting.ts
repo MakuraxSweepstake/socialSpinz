@@ -58,11 +58,34 @@ export interface BannerProps {
     cta_link: string;
     image?: File | null;
     image_url?: string | null;
-    type: boolean /** TYPE TRUE REPRESENT SUB BANNER */
+    type: boolean
 }
 
 export interface BannerResponseProps {
     message: string;
     success: boolean;
     data: BannerProps[];
+}
+
+export interface TransactionLimitSettings {
+    min_deposit: number | null;
+    max_deposit: number | null;
+    min_withdrawal: number | null;
+    max_withdrawal: number | null;
+}
+
+export interface TransactionLimitResponse {
+    success: boolean;
+    message: string;
+    data: TransactionLimitSettings;
+}
+
+export interface SiteAvailabilitySettings {
+    coming_soon: boolean;
+}
+
+export interface SiteAvailabilityResponse {
+    success: boolean;
+    message: string;
+    data: SiteAvailabilitySettings;
 }

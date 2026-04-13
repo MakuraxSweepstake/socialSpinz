@@ -1,38 +1,43 @@
-import GoldCoinIcon from '@/icons/GoldCoinIcon'
-import { Box, Button, OutlinedInput } from '@mui/material'
-import { Coin } from '@wandersonalwes/iconsax-react'
-import Link from 'next/link'
-import React from 'react'
-import CoinCalculator from './CoinCalculator'
-import GlassWrapper from '@/components/molecules/GlassWrapper'
+"use client";
+import GlassWrapper from '@/components/molecules/GlassWrapper';
+import GoldCoinIcon from '@/icons/GoldCoinIcon';
+import { useGetTransactionLimitsQuery } from '@/services/settingApi';
+import { Box } from '@mui/material';
+import { Coin } from '@wandersonalwes/iconsax-react';
+import Link from 'next/link';
+import CoinCalculator from './CoinCalculator';
 
 export default function BuyCoinSinlgeGame({ slug }: { slug: string }) {
     const packs = [
         {
-            amount: "10",
+            amount: "20",
             label: "Starter Pack",
-            coin: "1000",
-            bonus: "10",
+            coin: "2000",
+            bonus: "20",
             tag: "popular"
         },
         {
-            amount: "20",
-            label: "Golden Pack",
-            coin: "2000",
-            bonus: "20",
-        },
-        {
             amount: "50",
-            label: "Legend Pack",
+            label: "Golden Pack",
             coin: "5000",
             bonus: "50",
         },
+        {
+            amount: "100",
+            label: "Legend Pack",
+            coin: "10000",
+            bonus: "100",
+        },
 
     ]
+
+    const { data: limitsData } = useGetTransactionLimitsQuery();
+    const minDeposit = limitsData?.data?.min_deposit ?? null;
+    const maxDeposit = limitsData?.data?.max_deposit ?? null;
     return (
         <section className="buy__coin__root">
             <div className="section__title mb-4 lg:mb-8 max-w-[520px]">
-                <h1 className='mb-2 text-[24px] lg:text-[32px]'>Buy Coins</h1>
+                <h1 className='mb-2 text-[24px] lg:text-[32px]'>Buy Coins <span className="text-[#FBA027] text-[20px]">{(minDeposit !== null || maxDeposit !== null) && (<span className="text-[#FBA027] text-[20px]"> ({minDeposit !== null ? `Min $${minDeposit}` : ""}{minDeposit !== null && maxDeposit !== null ? " – " : ""}{maxDeposit !== null ? `Max $${maxDeposit}` : ""})</span>)}</span></h1>
                 <p className='text-[11px] lg:text-[13px]'>To start playing and cashing out your winnings, you’ll need a crypto wallet to purchase E-Credits and receive payouts. Don't worry—it’s quick and easy!</p>
             </div>
             <div className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">

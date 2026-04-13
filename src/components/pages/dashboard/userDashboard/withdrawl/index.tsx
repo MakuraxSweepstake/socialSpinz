@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppDispatch } from "@/hooks/hook";
+import { useGetTransactionLimitsQuery } from "@/services/settingApi";
 import { useSubmitMassPayPaymentFieldsMutation } from "@/services/transaction";
 import { showToast, ToastVariant } from "@/slice/toastSlice";
 import { openPasswordDialog } from "@/slice/updatePasswordSlice";
@@ -14,18 +15,27 @@ import React from "react";
 import * as Yup from "yup";
 import WithdrawlModal from "./WithdrawlModal";
 
-const validationSchema = Yup.object({
-    withdrawl_amounts: Yup.object().test(
-        "min-amount",
-        "Amount must be greater than $40",
-        (value) => {
-            if (!value) return true;
-            return Object.values(value).every(
-                (v) => v === "" || Number(v) >= 40
-            );
-        }
-    ),
-});
+const buildValidationSchema = (min: number | null, max: number | null) =>
+    Yup.object({
+        withdrawl_amounts: Yup.object().test(
+            "amount-range",
+            "", // message set dynamically below
+            function (value) {
+                if (!value) return true;
+                for (const v of Object.values(value)) {
+                    if (v === "" || v === undefined) continue;
+                    const num = Number(v);
+                    if (min !== null && num < min) {
+                        return this.createError({ message: `Amount must be at least $${min}` });
+                    }
+                    if (max !== null && num > max) {
+                        return this.createError({ message: `Amount must not exceed $${max}` });
+                    }
+                }
+                return true;
+            }
+        ),
+    });
 
 export type WithdrawlFormValues = {
     game_provider: string;
@@ -68,6 +78,9 @@ export default function WithdrawlPage({
     const dispatch = useAppDispatch();
 
     const [withdrawMoney, { isLoading }] = useSubmitMassPayPaymentFieldsMutation();
+    const { data: limitsData } = useGetTransactionLimitsQuery();
+    const minWithdrawal = limitsData?.data?.min_withdrawal ?? null;
+    const maxWithdrawal = limitsData?.data?.max_withdrawal ?? null;
 
     const formik = useFormik<WithdrawlFormValues>({
         initialValues: {
@@ -76,7 +89,7 @@ export default function WithdrawlPage({
             type: "",
             payment_fields: []
         },
-        validationSchema,
+        validationSchema: buildValidationSchema(minWithdrawal, maxWithdrawal),
         enableReinitialize: true,
 
         onSubmit: async (values) => {
@@ -131,7 +144,6 @@ export default function WithdrawlPage({
                     })
                 );
             } catch (e: any) {
-                console.log("Withdrawal Error:", e);
                 dispatch(
                     showToast({
                         message: e?.data?.message || "Something went wrong",
@@ -155,13 +167,12 @@ export default function WithdrawlPage({
     };
 
     const handleWithdrawClick = (balance: number, provider: string) => {
-        if (balance < 40 || balance > 400) {
-            dispatch(
-                showToast({
-                    message: "Withdraw Amount must be at least $40 and below $400",
-                    variant: ToastVariant.ERROR,
-                })
-            );
+        if (minWithdrawal !== null && balance < minWithdrawal) {
+            dispatch(showToast({ message: `Withdraw amount must be at least $${minWithdrawal}`, variant: ToastVariant.ERROR }));
+            return;
+        }
+        if (maxWithdrawal !== null && balance > maxWithdrawal) {
+            dispatch(showToast({ message: `Withdraw amount must not exceed $${maxWithdrawal}`, variant: ToastVariant.ERROR }));
             return;
         }
         formik.setFieldValue("game_provider", provider);
@@ -179,11 +190,10 @@ export default function WithdrawlPage({
         }
     };
 
-    console.log("Formik Errors:", formik.values.withdrawl_amounts);
     return (
         <section className="withdrawl__root">
             <div className="section__title mb-4 lg:mb-8 max-w-[560px]">
-                <h1 className="mb-2 text-[24px] lg:text-[32px]">Withdraw Coins <span className="text-[#FBA027] text-[20px]">(Min Withdrawl $40)</span></h1>
+                <h1 className="mb-2 text-[24px] lg:text-[32px]">Withdraw Coins{(minWithdrawal !== null || maxWithdrawal !== null) && (<span className="text-[#FBA027] text-[20px]"> ({minWithdrawal !== null ? `Min $${minWithdrawal}` : ""}{minWithdrawal !== null && maxWithdrawal !== null ? " – " : ""}{maxWithdrawal !== null ? `Max $${maxWithdrawal}` : ""})</span>)}</h1>
                 <p className="text-[11px] lg:text-[13px]">
                     To start playing and cashing out your winnings, you'll need a crypto
                     wallet to purchase E-Credits and receive payouts. Don't worry—it's quick
@@ -290,7 +300,7 @@ export default function WithdrawlPage({
                                                     }
                                                 </span>
                                             )}
-                                        <span className="text-[8px] lg:text-[10px]">Min $40.0</span>
+                                        {(minWithdrawal !== null || maxWithdrawal !== null) && (<span className="text-[8px] lg:text-[10px]">{minWithdrawal !== null ? `Min $${minWithdrawal}` : ""}{minWithdrawal !== null && maxWithdrawal !== null ? " / " : ""}{maxWithdrawal !== null ? `Max $${maxWithdrawal}` : ""}</span>)}
                                     </div>
 
                                     {/* Withdraw Button */}

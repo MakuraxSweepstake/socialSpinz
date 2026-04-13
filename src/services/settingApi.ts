@@ -1,7 +1,7 @@
+import { GlobalResponse } from "@/types/config";
+import { BannerResponseProps, SiteAvailabilityResponse, SiteAvailabilitySettings, SiteSettingResponseProps, TransactionLimitResponse, TransactionLimitSettings } from "@/types/setting";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
-import { GlobalResponse } from "@/types/config";
-import { BannerResponseProps, SiteSettingResponseProps } from "@/types/setting";
 
 export const settingApi = createApi({
     reducerPath: "settingApi",
@@ -38,8 +38,50 @@ export const settingApi = createApi({
             }),
             providesTags: ['banners']
         }),
+        getTransactionLimits: builder.query<TransactionLimitResponse, void>({
+            query: () => ({
+                url: "/api/settings/transaction-limits",
+                method: "GET",
+            }),
+            providesTags: ['settings']
+        }),
+        updateTransactionLimits: builder.mutation<GlobalResponse, TransactionLimitSettings>({
+            query: (body) => ({
+                url: "/api/admin/settings/transaction-limits",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ['settings']
+        }),
+
+        getSiteAvailability: builder.query<SiteAvailabilityResponse, void>({
+            query: () => ({
+                url: "/api/settings/site-availability",
+                method: "GET",
+            }),
+            providesTags: ['settings']
+        }),
+
+        updateSiteAvailability: builder.mutation<GlobalResponse, SiteAvailabilitySettings>({
+            query: (body) => ({
+                url: "/api/admin/settings/site-availability",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ['settings']
+        }),
 
     })
 })
 
-export const { useUpdateSettingMutation, useGetSettingsQuery, useUpdateBannerMutation, useGetAllBannerQuery } = settingApi;
+export const {
+    useUpdateSettingMutation,
+    useGetSettingsQuery,
+    useUpdateBannerMutation,
+    useGetAllBannerQuery,
+    useGetTransactionLimitsQuery,
+    useUpdateTransactionLimitsMutation,
+    useGetSiteAvailabilityQuery,
+    useUpdateSiteAvailabilityMutation,
+
+} = settingApi;

@@ -12,6 +12,7 @@ interface PasswordFieldProps {
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     onBlur: React.FocusEventHandler<HTMLInputElement>;
     error?: string;
+    required?: boolean;
 }
 
 export default function PasswordField({
@@ -22,14 +23,15 @@ export default function PasswordField({
     onChange,
     onBlur,
     error,
+    required = false
 }: PasswordFieldProps) {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((prev) => !prev);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
     return (
-        <div className="input_field">
-            <InputLabel htmlFor={name}>{label} <span className="text-red-500">*</span></InputLabel>
+        <div className="input__field">
+            <InputLabel htmlFor={name}>{label} {required && <span className="text-red-500">*</span>}</InputLabel>
             <OutlinedInput
                 id={name}
                 name={name}
@@ -46,9 +48,9 @@ export default function PasswordField({
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
                             color="secondary"
-                        // sx={{
-                        //     padding: 0,
-                        // }}
+                            sx={{
+                                padding: "0 4px",
+                            }}
                         >
                             {showPassword ? <Eye size={16} /> : <EyeSlash size={16} />}
                         </IconButton>

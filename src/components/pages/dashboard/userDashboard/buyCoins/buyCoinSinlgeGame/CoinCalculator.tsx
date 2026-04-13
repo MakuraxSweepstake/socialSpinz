@@ -1,19 +1,25 @@
 "use client";
 
 import GlassWrapper from '@/components/molecules/GlassWrapper';
+import { useAppDispatch } from '@/hooks/hook';
 import GoldCoinIcon from '@/icons/GoldCoinIcon';
+import { useGetTransactionLimitsQuery } from '@/services/settingApi';
+import { showToast, ToastVariant } from '@/slice/toastSlice';
 import { Box, Button, OutlinedInput } from '@mui/material';
 import { Coin } from '@wandersonalwes/iconsax-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function CoinCalculator({ slug }: { slug: string }) {
     const [amount, setAmount] = useState<number | "">("");
     const [baseCoins, setBaseCoins] = useState<number | null>(null);
-    const [bonusCoins, setBonusCoins] = useState<number | null>(null);
+    const [_bonusCoins, setBonusCoins] = useState<number | null>(null);
 
     const router = useRouter();
+    const dispatch = useAppDispatch();
+    const { data: limitsData } = useGetTransactionLimitsQuery();
+    const minDeposit = limitsData?.data?.min_deposit ?? 20;
+    const maxDeposit = limitsData?.data?.max_deposit ?? null;
 
     // const calculateBonus = (amount: number) => {
     //     return Math.max(Math.round(25.56 * amount - 27.78), 0);
@@ -38,6 +44,12 @@ export default function CoinCalculator({ slug }: { slug: string }) {
     };
 
     const handleBuy = () => {
+        if (Number(amount) < minDeposit) {
+            return dispatch(showToast({ message: `Minimum deposit is $${minDeposit}`, variant: ToastVariant.ERROR }));
+        }
+        if (maxDeposit !== null && Number(amount) > maxDeposit) {
+            return dispatch(showToast({ message: `Maximum deposit is $${maxDeposit}`, variant: ToastVariant.ERROR }));
+        }
         router.push(`/buy-coins/${slug}/checkout?amount=${amount}&bonus=${amount}`);
     };
 
@@ -52,7 +64,7 @@ export default function CoinCalculator({ slug }: { slug: string }) {
             }}>
                 <div className="title">
                     <h2 className='text-[28px]'>Custom</h2>
-                    <span className='text-[12px]'>$1 = 100 Gold Coins</span>
+                    <span className='text-[12px]'>$1 = 100 Gold Coins &nbsp;·&nbsp; Min ${minDeposit}{maxDeposit !== null ? ` / Max $${maxDeposit}` : ""}</span>
                 </div>
 
                 <div className="footer">

@@ -13,13 +13,12 @@ export default function BuyCoinGameListPage({
     games,
     coins,
 }: {
-    games?: GameResponseProps
+    games: GameResponseProps
     coins: any
 }) {
     const gameInfo = coins?.data?.game_information || {}
     const dispatch = useAppDispatch();
 
-    console.log("coins", coins);
     return (
         <section className="buy__coin__root">
             <div className="section__title mb-4 lg:mb-8 max-w-[520px]">
@@ -30,10 +29,9 @@ export default function BuyCoinGameListPage({
             </div>
 
             <div className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-                {games && games?.data?.data.map((game) => {
+                {games?.data?.data.map((game) => {
                     const info = gameInfo[game.provider.toLowerCase()] || { balance: 0, type: 'sc' }
                     const CoinIcon = info.type === 'gc' ? GoldCoinIcon : SilverCoinIcon
-                    console.log(info.has_changed_password)
 
                     return (
                         <div key={game.id} className={`col-span-1 ${info.type === 'gc' ? "hidden" : ""}`}>
@@ -67,7 +65,7 @@ export default function BuyCoinGameListPage({
                                         if (info?.has_changed_password) {
                                             e.preventDefault();
                                             dispatch(openPasswordDialog({
-                                                provider: game?.name,
+                                                provider: game?.provider,
                                             }));
                                         }
                                     }}

@@ -14,12 +14,13 @@ export interface CommonPlayerProps {
     password: string;
     password_confirmation: string;
     role?: string;
-    dob?: string | Dayjs | null;
-    zip_code?: string;
-    pob?: string;
     state?: string;
-    postal_code: string;
-    ssn: number | null;
+    dob?: string | Dayjs | null;
+    postal_code?: string;
+    is_acuity_verified?: boolean
+    gender: string;
+    address_line_two?: string;
+    ssn: string;
 }
 export interface PlayerProps extends CommonPlayerProps {
     id?: string;
@@ -43,9 +44,11 @@ export const initialPlayerValues: PlayerProps = {
     password: "",
     password_confirmation: "",
     profile_image: null,
-    dob: "",
+    dob: null as Dayjs | null,
     postal_code: "",
-    ssn: null,
+    gender: "",
+    address_line_two: "",
+    ssn: "",
 };
 
 type GameInformation = {
@@ -54,6 +57,7 @@ type GameInformation = {
     game_name: string,
     percentage: number,
     type: string
+    name: string;
 }
 export interface PlayerItem extends CommonPlayerProps {
     id: string;

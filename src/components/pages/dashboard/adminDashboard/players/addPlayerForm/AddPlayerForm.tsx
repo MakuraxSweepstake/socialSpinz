@@ -2,13 +2,13 @@
 import InputFile from '@/components/atom/InputFile';
 import PasswordField from '@/components/molecules/PasswordField';
 import { US_STATES } from '@/constants/state';
+import { useAppSelector } from '@/hooks/hook';
 import { PlayerProps, SinlgePlayerResponseProps } from '@/types/player';
 import { Button, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { FormikProps } from 'formik';
-import { useRouter } from 'next/navigation';
 
 const formFieldSx = {
     '& .MuiOutlinedInput-root, & .MuiPickersInputBase-root, & .MuiPickersOutlinedInput-root': {
@@ -50,14 +50,12 @@ const formFieldSx = {
     }
 };
 
-
-export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }: { formik: FormikProps<PlayerProps>, id?: string, data?: SinlgePlayerResponseProps, loading?: boolean, buttonLabel?: string }) {
-    const router = useRouter();
-
+export default function AddPlayerForm({ formik, id, data, loading, buttonLabel, isAdmin = false }: { formik: FormikProps<PlayerProps>, id?: string, data?: SinlgePlayerResponseProps, loading?: boolean, buttonLabel?: string; isAdmin?: boolean }) {
+    const user = useAppSelector(state => state.auth.user);
     return (
         <form onSubmit={formik.handleSubmit}>
-            <div className="form__fields p-6 lg:p-10 flex flex-col gap-4 lg:gap-6 lg:grid grid-cols-2">
-                <div className="input__field">
+            <div className="form__fields p-6 lg:p-10 flex flex-col gap-4 lg:gap-6 lg:grid lg:grid-cols-2">
+                <div className="input__field col-span-1">
                     <InputLabel htmlFor="name">Username<span className="text-red-500">*</span></InputLabel>
                     <OutlinedInput
                         fullWidth
@@ -73,7 +71,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                         {formik.touched.name && formik.errors.name ? formik.errors.name : ""}
                     </span>
                 </div>
-                <div className="input__field">
+                <div className="input__field col-span-1">
                     <InputLabel htmlFor="email">Email<span className="text-red-500">*</span></InputLabel>
                     <OutlinedInput
                         fullWidth
@@ -122,7 +120,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                     </span>
                 </div>
 
-                <div className="input__field">
+                {isAdmin ? "" : <div className="input__field">
                     <InputLabel htmlFor="wallet_address">Wallet Address</InputLabel>
                     <OutlinedInput
                         fullWidth
@@ -136,28 +134,61 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                     <span className="error">
                         {formik.touched.wallet_address && formik.errors.wallet_address ? formik.errors.wallet_address : ""}
                     </span>
-                </div>
+                </div>}
 
+                {isAdmin ? "" : <>
+                    <div className="input__field col-span-1">
+                        <InputLabel htmlFor="address">Address Line 1<span className="text-red-500">*</span></InputLabel>
+                        <OutlinedInput
+                            fullWidth
+                            id="address"
+                            name="address"
+                            placeholder="Enter address"
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                        />
+                        <span className="error">
+                            {formik.touched.address && formik.errors.address ? formik.errors.address : ""}
+                        </span>
+                    </div>
 
-                <div className="input__field">
-                    <InputLabel htmlFor="city">City<span className="text-red-500">*</span></InputLabel>
-                    <OutlinedInput
-                        fullWidth
-                        id="city"
-                        name="city"
-                        placeholder="Enter city"
-                        value={formik.values.city}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    <span className="error">
-                        {formik.touched.city && formik.errors.city ? formik.errors.city : ""}
-                    </span>
-                </div>
+                    <div className="input__field col-span-1">
+                        <InputLabel htmlFor="address_line_two">Address Line 2</InputLabel>
+                        <OutlinedInput
+                            fullWidth
+                            id="address_line_two"
+                            name="address_line_two"
+                            placeholder="Enter address line 2"
+                            value={formik.values.address_line_two}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                        />
+                        <span className="error">
+                            {formik.touched.address_line_two && formik.errors.address_line_two ? formik.errors.address_line_two : ""}
+                        </span>
+                    </div>
 
-                <div className="input__field">
+                    <div className="input__field">
+                        <InputLabel htmlFor="city">City <span className="text-red-500">*</span></InputLabel>
+                        <OutlinedInput
+                            fullWidth
+                            id="city"
+                            name="city"
+                            placeholder="Enter city"
+                            value={formik.values.city}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                        />
+                        <span className="error">
+                            {formik.touched.city && formik.errors.city ? formik.errors.city : ""}
+                        </span>
+                    </div>
+                </>}
+
+                <div className="lg:col-span-2">
                     <InputLabel htmlFor="phone">Phone <span className="text-red-500">*</span></InputLabel>
-                    <div className="grid grid-cols-12 gap-1 items-end">
+                    <div className="grid grid-cols-12 gap-1 items-start">
                         <div className="col-span-4 lg:col-span-3">
                             <OutlinedInput
                                 fullWidth
@@ -165,6 +196,8 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                                 name="country_code"
                                 placeholder="Enter country_code number"
                                 value={"+1"}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 disabled
                             />
                         </div>
@@ -178,17 +211,15 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
+                            <span className="error">
+                                {formik.touched.phone && formik.errors.phone ? formik.errors.phone : ""}
+                            </span>
                         </div>
                     </div>
-
-                    <span className="error">
-                        {formik.touched.phone && formik.errors.phone ? formik.errors.phone : ""}
-                    </span>
                 </div>
 
                 <div className="input__field">
                     <InputLabel htmlFor="state">State <span className="text-red-500">*</span></InputLabel>
-
                     <Select
                         fullWidth
                         id="state"
@@ -197,7 +228,6 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                         value={formik.values.state}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        sx={formFieldSx}
                         renderValue={(selected) =>
                             selected === "" ? "Select a State" : selected
                         }
@@ -215,24 +245,55 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                     <span className="error">{formik.touched.state && formik.errors.state}</span>
                 </div>
 
-                {/* <div className="input__field">
-                    <InputLabel htmlFor="zip_code">Zip Code <span className="text-red-500">*</span></InputLabel>
+
+                {isAdmin ? "" : <div className="input__field">
+                    <InputLabel htmlFor="ssn">SSN<span className="text-red-500"> (last 4 Digit) *</span></InputLabel>
                     <OutlinedInput
                         fullWidth
-                        id="zip_code"
-                        name="zip_code"
-                        placeholder="Enter zip code"
-                        value={formik.values.zip_code}
+                        id="ssn"
+                        name="ssn"
+                        placeholder="Enter Last 4 Digit of SSN"
+                        value={formik.values.ssn}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     />
                     <span className="error">
-                        {formik.touched.zip_code && formik.errors.zip_code ? formik.errors.zip_code : ""}
+                        {formik.touched.ssn && formik.errors.ssn ? formik.errors.ssn : ""}
                     </span>
-                </div> */}
-
+                </div>}
                 <div className="input__field">
-                    <InputLabel htmlFor="postal_code">Postal Code <span className="text-red-500">*</span></InputLabel>
+                    <InputLabel htmlFor="gender">Gender <span className="text-red-500">*</span></InputLabel>
+                    <Select
+                        fullWidth
+                        id="gender"
+                        name="gender"
+                        displayEmpty
+                        value={formik.values.gender}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        renderValue={(selected) =>
+                            selected === "" ? "Select a Gender" : selected
+                        }
+                    >
+                        <MenuItem value="">
+                            <em>Select a Gender</em>
+                        </MenuItem>
+                        {[
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
+                            { label: "Other", value: "O" },
+                        ].map((state) => (
+                            <MenuItem key={state.value} value={state.value}>
+                                {state.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+
+                    <span className="error">{formik.touched.gender && formik.errors.gender}</span>
+                </div>
+
+                {!isAdmin ? <div className="input__field">
+                    <InputLabel htmlFor="postal_code">Zip Code <span className="text-red-500">*</span></InputLabel>
                     <OutlinedInput
                         fullWidth
                         id="postal_code"
@@ -245,23 +306,7 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                     <span className="error">
                         {formik.touched.postal_code && formik.errors.postal_code ? formik.errors.postal_code : ""}
                     </span>
-                </div>
-
-                <div className="input__field">
-                    <InputLabel htmlFor="ssn">SSN<span className="text-red-500"> (last 4 Digit) *</span></InputLabel>
-                    <OutlinedInput
-                        fullWidth
-                        id="ssn"
-                        name="ssn"
-                        placeholder="Enter zip code"
-                        value={formik.values.ssn}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    <span className="error">
-                        {formik.touched.ssn && formik.errors.ssn ? formik.errors.ssn : ""}
-                    </span>
-                </div>
+                </div> : ""}
 
                 {/* DOB */}
                 <div className="input__field">
@@ -282,41 +327,17 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
                                     error: Boolean(formik.touched.dob && formik.errors.dob),
                                     onBlur: formik.handleBlur,
                                     helperText: formik.touched.dob && formik.errors.dob,
-                                    sx: formFieldSx
-                                },
-                                popper: {
-                                    sx: {
-                                        '& .MuiPickersCalendarHeader-label': {
-                                            color: '#fff',
+                                    sx: user?.role === "user" ? { ...formFieldSx } : {
+                                        "&& .MuiPickersInputBase-input": {
+                                            padding: "10px 14px !important",
                                         },
-                                        '& .MuiDayCalendar-weekDayLabel': {
-                                            color: '#fff',
+                                        "&& .MuiPickersSectionList-root": {
+                                            borderRadius: "8px !important",
+                                            padding: "4px 12px 4px 0 !important",
                                         },
-                                        '& .MuiPickersDay-root': {
-                                            color: '#fff',
-                                        },
-                                        '& .MuiPickersDay-root.Mui-selected': {
-                                            backgroundColor: '#B801C0',
-                                        },
-                                        '& .MuiPickersDay-root:hover': {
-                                            backgroundColor: 'rgba(184, 1, 192, 0.3)',
-                                        },
-                                        '& .MuiPickersArrowSwitcher-button': {
-                                            color: '#fff',
-                                        },
-                                        '& .MuiPickersCalendarHeader-root': {
-                                            color: '#fff',
-                                        },
-                                        '& .MuiPickersDay-root.MuiPickersDay-today': {
-                                            backgroundColor: '#B801C0',
-                                            border: '1px solid #fff',
-                                            '&:not(.Mui-selected)': {
-                                                backgroundColor: '#B801C0',
-                                            }
-                                        },
-
                                     }
-                                }
+                                },
+
                             }}
                             maxDate={dayjs()}
                             format="MM/DD/YYYY"
@@ -326,8 +347,9 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
 
                 <div className="input__field">
                     <PasswordField
+                        required={id ? false : true}
                         name="password"
-                        label="Password*"
+                        label="Password"
                         placeholder="Enter password"
                         value={formik.values.password}
                         onChange={formik.handleChange}
@@ -338,8 +360,9 @@ export default function AddPlayerForm({ formik, id, data, loading, buttonLabel }
 
                 <div className="input__field">
                     <PasswordField
+                        required={id ? false : true}
                         name="password_confirmation"
-                        label="Confirm Password*"
+                        label="Confirm Password"
                         placeholder="Confirm password"
                         value={formik.values.password_confirmation}
                         onChange={formik.handleChange}

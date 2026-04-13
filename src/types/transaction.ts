@@ -12,6 +12,13 @@ export interface DepositProps {
     exp?: string;
     number?: string;
     hash?: string;
+    status?: "success" | "failed";
+    first_name?: string;
+    last_name?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
 }
 
 export interface DepositUrlProps {

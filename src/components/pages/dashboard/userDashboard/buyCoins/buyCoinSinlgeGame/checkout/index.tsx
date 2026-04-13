@@ -1,33 +1,31 @@
 "use client";
 
 import GlassWrapper from '@/components/molecules/GlassWrapper';
+import PaymentModal from '@/components/molecules/PaymentModal';
 import { useAppDispatch } from '@/hooks/hook';
 import BitCoinIcon from '@/icons/BitCoinIcon';
 import GoldCoinIcon from '@/icons/GoldCoinIcon';
 import { useDepositMutation } from '@/services/transaction';
 import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { PaymentModeProps } from '@/types/transaction';
 import { Box, Button } from '@mui/material';
-import { DollarCircle, TickCircle } from '@wandersonalwes/iconsax-react';
+import { Card, TickCircle } from '@wandersonalwes/iconsax-react';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
-import React from 'react';
+import { useState } from 'react';
 import PaymentForm from './FortPay';
 
-
+export type PaymentModeProps = "crypto" | "fortpay"
 
 export default function CheckoutPage({ amount, slug, bonus }: {
     amount: number;
     slug: string;
     bonus: number
 }) {
-    const pathname = usePathname();
     const dispatch = useAppDispatch();
-    const router = useRouter();
     const [getPaymentLink, { isLoading: gettingLink }] = useDepositMutation();
-    const [currentPaymentMode, setCurrentPaymentMode] = React.useState("crypto");
+    const [currentPaymentMode, setCurrentPaymentMode] = useState<PaymentModeProps>("crypto");
+    const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
 
-    // console.log(pathname)
     return (
         <section className="checkout__root">
             <div className="grid grid-cols-12 gap-4 lg:gap-10 xl:gap-12">
@@ -57,7 +55,6 @@ export default function CheckoutPage({ amount, slug, bonus }: {
                                 <p>
                                     <strong className='text-[16px] block'>{amount ? amount * 100 : ""}</strong>
                                 </p>
-
                             </div>
                             <div className="coin-info flex justify-between items-center py-3 px-4 mt-1"
                                 style={{
@@ -73,103 +70,79 @@ export default function CheckoutPage({ amount, slug, bonus }: {
                                     <strong className='text-[16px] block'>{bonus}</strong>
                                 </p>
                             </div>
-
                         </div>
                     </Box>
                 </div>
+
                 <div className="col-span-12 lg:col-span-8">
                     <Box>
                         <h1 className='mb-2 text-[24px] lg:text-[32px]'>Payment Method</h1>
-                        <p className='text-[11px] lg:text-[13px]'>To start playing and cashing out your winnings, you’ll need a crypto wallet to purchase E-Credits and receive payouts. Don't worry—it’s quick and easy!</p>
+                        <p className='text-[11px] lg:text-[13px]'>To start playing and cashing out your winnings, you'll need a crypto wallet to purchase E-Credits and receive payouts. Don't worry—it's quick and easy!</p>
 
-                        <h2 className='text-[20px] lg:text-[24px]  mt-8 mb-4'>Select payment method</h2>
+                        <h2 className='text-[20px] lg:text-[24px] mt-8 mb-4'>Select payment method</h2>
+
                         <div className="grid sm:grid-cols-2 mb-8 gap-6">
                             <div className="col-span-1">
                                 <GlassWrapper>
-                                    <div className="py-5 px-4 flex justify-between items-center cursor-pointer" onClick={() => setCurrentPaymentMode("crypto")} >
-                                        <span className="text-[14px] flex items-center justify-start gap-2"><BitCoinIcon />Crypto Currency</span>
+                                    <div
+                                        className="py-5 px-4 flex justify-between items-center cursor-pointer"
+                                        onClick={() => setCurrentPaymentMode("crypto")}
+                                    >
+                                        <span className="text-[14px] flex items-center justify-start gap-2">
+                                            <BitCoinIcon />Crypto Currency
+                                        </span>
                                         {currentPaymentMode === "crypto" ? <TickCircle /> : ""}
                                     </div>
                                 </GlassWrapper>
                             </div>
                             <div className="col-span-1">
                                 <GlassWrapper>
-                                    <div className="py-5 px-4 flex justify-between items-center cursor-pointer" onClick={() => setCurrentPaymentMode("fortpay")} >
-                                        <span className="text-[14px] flex items-center justify-start gap-2"><DollarCircle />Fortpay</span>
+                                    <div
+                                        className="py-5 px-4 flex justify-between items-center cursor-pointer"
+                                        onClick={() => setCurrentPaymentMode("fortpay")}
+                                    >
+                                        <span className="text-[14px] flex items-center justify-start gap-2">
+                                            <Card />Card Payments
+                                        </span>
                                         {currentPaymentMode === "fortpay" ? <TickCircle /> : ""}
                                     </div>
                                 </GlassWrapper>
                             </div>
-
                         </div>
 
-                        {currentPaymentMode === "fortpay" ? (
+                        {currentPaymentMode === "fortpay" && (
                             <PaymentForm id={slug} amount={amount} type={currentPaymentMode as PaymentModeProps} />
-                        ) :
-                            <Button type='submit' variant='contained' color='primary' className='!mt-3' onClick={async () => {
-                                try {
-                                    if (currentPaymentMode === "crypto") {
+                        )}
+
+                        {currentPaymentMode === "crypto" && (
+                            <Button
+                                type='submit'
+                                variant='contained'
+                                color='primary'
+                                className='!mt-3'
+                                onClick={async () => {
+                                    try {
                                         const response = await getPaymentLink({
                                             id: slug,
                                             amount,
                                             type: currentPaymentMode as PaymentModeProps
                                         }).unwrap();
-                                        window.open(response?.data?.payment_url, "_blank")
-                                    }
-                                    else if (currentPaymentMode === "idem") {
-                                        const response = await getPaymentLink({
-                                            id: slug,
-                                            amount,
-                                            type: currentPaymentMode as PaymentModeProps
-                                        }).unwrap();
+                                        setPaymentUrl(response?.data?.payment_url);
+                                        setShowPaymentModal(true);
 
-                                        const merchant_id = response?.data?.merchant_id;
-                                        const currency = response?.data?.currency;
-                                        const order_ref = response?.data?.payment_id;
-
-
-                                        const form = document.createElement("form");
-                                        form.method = "POST";
-                                        form.action = response?.data?.payment_url;
-                                        const fields = {
-                                            merchant_id,
-                                            amount,
-                                            currency,
-                                            order_ref,
-                                            completed_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/buy-coins/${slug}/success`
-                                        };
-
-                                        Object.entries(fields).forEach(([key, value]) => {
-                                            const input = document.createElement("input");
-                                            input.type = "hidden";
-                                            input.name = key;
-                                            input.value = value as string;
-                                            form.appendChild(input);
-                                        });
-
-                                        document.body.appendChild(form);
-                                        form.submit();
-                                    }
-
-                                    else {
+                                    } catch (e: any) {
                                         dispatch(
                                             showToast({
-                                                message: "Please select prefered mode of payment.",
-                                                variant: ToastVariant.INFO
+                                                message: e?.data?.message || "Something went wrong",
+                                                variant: ToastVariant.ERROR
                                             })
-                                        )
+                                        );
                                     }
-
-                                }
-                                catch (e: any) {
-                                    dispatch(
-                                        showToast({
-                                            message: e?.data?.message || "Something went wrong",
-                                            variant: ToastVariant.ERROR
-                                        })
-                                    )
-                                }
-                            }}>{gettingLink ? "Proceeding to Payment..." : "Proceed to Payment"}</Button>}
+                                }}
+                            >
+                                {gettingLink ? "Proceeding to Payment..." : "Proceed to Payment"}
+                            </Button>
+                        )}
 
                         <p className="text-[11px] leading-[120%] mt-8 mb-2 text-center">Powered By</p>
                         <div className="flex justify-center items-center gap-4">
@@ -180,6 +153,41 @@ export default function CheckoutPage({ amount, slug, bonus }: {
                     </Box>
                 </div>
             </div>
-        </section >
-    )
+
+            {/* Payment Modal for Crypto Payments */}
+            {paymentUrl && (
+                <PaymentModal
+                    url={paymentUrl}
+                    isOpen={showPaymentModal}
+                    onClose={() => {
+                        setShowPaymentModal(false);
+                        setPaymentUrl(null);
+                    }}
+                    onSuccess={() => {
+                        dispatch(
+                            showToast({
+                                message: "Payment processing initiated. Please wait...",
+                                variant: ToastVariant.SUCCESS,
+                                autoTime: true
+                            })
+                        );
+                        // The actual success will be handled by the payment provider's redirect
+                        // to /buy-coins/[slug]/success
+                    }}
+                    onError={(error) => {
+                        dispatch(
+                            showToast({
+                                message: `Payment failed: ${error.message}`,
+                                variant: ToastVariant.ERROR,
+                                autoTime: true
+                            })
+                        );
+                    }}
+                    title="Processing Payment"
+                    successMessage="success"
+                    isPurchaseFlow={true}
+                />
+            )}
+        </section>
+    );
 }

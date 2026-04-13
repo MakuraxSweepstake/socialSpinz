@@ -8,26 +8,11 @@ export const authApi = createApi({
     baseQuery: baseQuery,
     endpoints: (builder) => ({
         registerUser: builder.mutation<LoginResponse, RegisterProps>({
-            query: ({ email,
-                username,
-                password,
-                password_confirmation, first_name, middle_name, last_name, phone, photoid_number, dob, city, pob, agree, device_id, state, zip_code, postal_code, ssn }) => ({
-                    url: `/api/auth/register`,
-                    method: "POST",
-                    body: {
-                        email,
-                        username,
-                        password,
-                        password_confirmation,
-                        first_name,
-                        middle_name,
-                        last_name,
-                        phone,
-                        photoid_number,
-                        dob, city, pob, agree, device_id, state, zip_code, postal_code, ssn
-                    },
-                }),
-
+            query: (body) => ({
+                url: `/api/auth/register`,
+                method: "POST",
+                body
+            }),
         }),
         login: builder.mutation<LoginResponse, LoginProps>({
             query: ({ email, password, device_id }) => ({
@@ -77,6 +62,32 @@ export const authApi = createApi({
                     },
                 })
         }),
+        getAgeGateUuid: builder.mutation<GlobalResponse & { data: { age_verify_uuid: string, is_age_verified: boolean } }, void>({
+            query: () => ({
+                url: `/api/user/age-verify`,
+                method: "GET",
+            })
+        }),
+        verifyAgeGate: builder.mutation<GlobalResponse, { age_verify_uuid: string }>({
+            query: ({ age_verify_uuid }) => ({
+                url: `/api/user/age-verify`,
+                method: "POST",
+                body: { age_verify_uuid }
+            })
+        }),
+        getMe: builder.query<LoginResponse, void>({
+            query: () => ({
+                url: `/api/auth/me`,
+                method: "GET",
+            }),
+        }),
+
+        verifyProfile: builder.mutation<{ data: { redirection_url: string } }, void>({
+            query: () => ({
+                url: `/api/acuity/verify`,
+                method: "POST",
+            }),
+        }),
         Logout: builder.mutation<GlobalResponse, {}>({
             query: () => ({
                 url: `/api/logout`,
@@ -86,4 +97,4 @@ export const authApi = createApi({
     })
 })
 
-export const { useLoginMutation, useRegisterUserMutation, useSendVerificationLinkAgainMutation, useForgotPasswordMutation, useVerifyOTPMutation, useResetPasswordMutation, useVerifyEmailMutation, useLogoutMutation } = authApi;
+export const { useLoginMutation, useRegisterUserMutation, useSendVerificationLinkAgainMutation, useForgotPasswordMutation, useVerifyOTPMutation, useResetPasswordMutation, useVerifyEmailMutation, useGetAgeGateUuidMutation, useVerifyAgeGateMutation, useGetMeQuery, useLazyGetMeQuery, useVerifyProfileMutation, useLogoutMutation } = authApi;

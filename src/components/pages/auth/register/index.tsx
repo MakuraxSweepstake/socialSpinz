@@ -1,13 +1,12 @@
 'use client';
 
 import PasswordField from '@/components/molecules/PasswordField';
-import PaymentModal from '@/components/molecules/PaymentModal';
 import { US_STATES } from '@/constants/state';
 import { useAppDispatch } from '@/hooks/hook';
 import { PATH } from '@/routes/PATH';
 import { useRegisterUserMutation } from '@/services/authApi';
 import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { Box, Checkbox, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Box, Button, Checkbox, CircularProgress, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,6 +14,7 @@ import { ArrowLeft } from '@wandersonalwes/iconsax-react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useFormik } from 'formik';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import AuthMessageBlock from '../authMessageBlock';
@@ -95,7 +95,10 @@ const validationSchema = Yup.object().shape({
     last_name: Yup.string().required('Last name is required'),
     city: Yup.string().required("City is Required"),
     state: Yup.string().required("State is Required"),
-    // zip_code: Yup.string().required("Zip Code is Required"),
+    // postal_code: Yup.string().required("Zip Code is Required"),
+    address: Yup.string().required("Address is Required"),
+    address_line_two: Yup.string(),
+    gender: Yup.string().required("Gender is Required"),
     postal_code: Yup.string().required("Postal Code is Required"),
     ssn: Yup.string()
         .matches(/^\d{4}$/, "SSN must be exactly 4 digits no characters")
@@ -107,8 +110,8 @@ export default function RegisterPage() {
     const [registerUser, { isLoading }] = useRegisterUserMutation();
     const dispatch = useAppDispatch();
     const [isAcuityModalOpen, setIsAcuityModalOpen] = useState(false);
-    const [acuityUrl, setAcuityUrl] = useState('');
-    // const route = useRouter();
+    // const [acuityUrl, setAcuityUrl] = useState('');
+    const route = useRouter();
     const initialValues = {
         first_name: '',
         middle_name: '',
@@ -121,12 +124,13 @@ export default function RegisterPage() {
         photoid_number: '',
         dob: null as Dayjs | null,
         city: '',
-        pob: '',
         agree: true,
         state: "",
-        zip_code: "",
         postal_code: "",
-        ssn: ""
+        ssn: "",
+        address: "",
+        address_line_two: "",
+        gender: ""
     }
     const { handleSubmit, handleBlur, handleChange, errors, dirty, values, touched, setFieldValue, setFieldTouched } = useFormik(
         {
@@ -148,11 +152,12 @@ export default function RegisterPage() {
                         dob: formattedDob,
                         city: values.city,
                         state: values.state,
-                        zip_code: values.zip_code,
-                        pob: values.pob,
-                        agree: values.agree,
                         postal_code: values.postal_code,
-                        ssn: values.ssn
+                        agree: values.agree,
+                        ssn: values.ssn,
+                        address: values.address,
+                        address_line_two: values.address_line_two,
+                        gender: values.gender
                     }).unwrap();
 
                     dispatch(
@@ -162,12 +167,11 @@ export default function RegisterPage() {
                             autoTime: true,
                         }),
                     );
-                    console.log("Register response:", response?.data?.redirection_url);
                     if (response?.data?.redirection_url) {
                         // window.open(response?.data?.redirection_url, "_blank");
-                        setAcuityUrl(response.data.redirection_url);
-                        setIsAcuityModalOpen(true);
-                        // route.replace(PATH.AUTH.LOGIN.ROOT)
+                        // setAcuityUrl(response.data.redirection_url);
+                        // setIsAcuityModalOpen(true);
+                        route.replace(PATH.AUTH.LOGIN.ROOT)
                     }
 
                 }
@@ -184,7 +188,6 @@ export default function RegisterPage() {
         }
     )
 
-    console.log(errors)
     return (
         <>
             <AuthMessageBlock
@@ -275,6 +278,38 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
+                        <div className="input__field lg:col-span-3">
+                            <InputLabel htmlFor="address">Address Line 1<span className="text-red-500">*</span></InputLabel>
+                            <OutlinedInput
+                                fullWidth
+                                id="address"
+                                name="address"
+                                placeholder="Enter address"
+                                value={values.address}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <span className="error">
+                                {touched.address && errors.address ? errors.address : ""}
+                            </span>
+                        </div>
+
+                        <div className="input__field lg:col-span-3">
+                            <InputLabel htmlFor="address_line_two">Address Line 2</InputLabel>
+                            <OutlinedInput
+                                fullWidth
+                                id="address_line_two"
+                                name="address_line_two"
+                                placeholder="Enter address line 2"
+                                value={values.address_line_two}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <span className="error">
+                                {touched.address_line_two && errors.address_line_two ? errors.address_line_two : ""}
+                            </span>
+                        </div>
+
                         {/* City */}
                         <div className="lg:col-span-3">
                             <div className="input__field">
@@ -324,6 +359,37 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
+                        <div className="input__field lg:col-span-3">
+                            <InputLabel htmlFor="gender">Gender <span className="text-red-500">*</span></InputLabel>
+                            <Select
+                                fullWidth
+                                id="gender"
+                                name="gender"
+                                displayEmpty
+                                value={values.gender}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                renderValue={(selected) =>
+                                    selected === "" ? "Select a Gender" : selected
+                                }
+                            >
+                                <MenuItem value="">
+                                    <em>Select a Gender</em>
+                                </MenuItem>
+                                {[
+                                    { label: "Male", value: "M" },
+                                    { label: "Female", value: "F" },
+                                    { label: "Other", value: "O" },
+                                ].map((state) => (
+                                    <MenuItem key={state.value} value={state.value}>
+                                        {state.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                            <span className="error">{touched.gender && errors.gender}</span>
+                        </div>
+
                         <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="postal_code">Postal Code <span className="text-red-500">*</span></InputLabel>
@@ -362,7 +428,7 @@ export default function RegisterPage() {
 
                         <div className="lg:col-span-3">
                             <InputLabel htmlFor="phone">Phone <span className="text-red-500">*</span></InputLabel>
-                            <div className="grid grid-cols-12 gap-1 items-end">
+                            <div className="grid grid-cols-12 gap-1 items-start">
                                 <div className="col-span-4 lg:col-span-3">
                                     <OutlinedInput
                                         fullWidth
@@ -391,7 +457,8 @@ export default function RegisterPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="lg:col-span-6">
+
+                        <div className="lg:col-span-3">
                             <div className="input__field">
                                 <InputLabel htmlFor="dob">Date of Birth <span className="text-red-500">*</span></InputLabel>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -452,6 +519,7 @@ export default function RegisterPage() {
                                 </LocalizationProvider>
                             </div>
                         </div>
+
                         <div className="lg:col-span-3">
                             <div className="input_field">
                                 <PasswordField
@@ -465,6 +533,7 @@ export default function RegisterPage() {
                                 />
                             </div>
                         </div>
+
                         <div className="lg:col-span-3">
                             <div className="input_field">
                                 <PasswordField
@@ -478,25 +547,27 @@ export default function RegisterPage() {
                                 />
                             </div>
                         </div>
+
                         <div className="col-span-6">
                             <FormControlLabel
                                 control={<Checkbox
                                     checked={values.agree}
-                                    onChange={() => setFieldValue("agree", !values.agree)}
+                                    onChange={() => setFieldValue("agree", true)}
                                 />}
                                 label="I agree to the terms and conditions" />
                         </div>
                     </div>
                     <div className="action__group text-center flex flex-col gap-4 mt-8">
-                        <button className='ss-btn bg-primary-grad' disabled={!dirty}>{isLoading ? "Signing Up" : "Sign up"}</button>
+                        <Button variant='contained' color='primary' type='submit' disabled={!dirty || isLoading} startIcon={isLoading ? <CircularProgress size={20} /> : undefined}>
+                            {isLoading ? "Signing Up" : "Sign up"}
+                        </Button>
                         <p className='text-[12px] leading-[120%] font-bold lg:text-[16px]'>Already Have an account?</p>
                         <Link href={PATH.AUTH.LOGIN.ROOT} className='ss-btn bg-secondary-grad'>Login</Link>
                     </div>
                 </form>
-
             </Box>
 
-            <PaymentModal
+            {/* <PaymentModal
                 url={acuityUrl}
                 isOpen={isAcuityModalOpen}
                 onClose={() => setIsAcuityModalOpen(false)}
@@ -513,7 +584,7 @@ export default function RegisterPage() {
                 maxWidth="md"
                 height={700}
                 isRegistrationFlow={true}
-            />
+            /> */}
 
         </>
     )

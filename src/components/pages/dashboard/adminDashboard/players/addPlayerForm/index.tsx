@@ -17,22 +17,21 @@ export const PlayerValidationSchema = (isEdit: boolean) => Yup.object().shape({
         .required("Email is required"),
     first_name: Yup.string().required("First name is required"),
     last_name: Yup.string().required("Last name is required"),
-    wallet_address: Yup.string().nullable(),
-    city: Yup.string().required("City is required"),
-    // zip_code: Yup.string().required("Zip code is required"),
+    // wallet_address: Yup.string().nullable(),
+    // address: Yup.string().required("Address is required"),
+    // city: Yup.string().required("City is required"),
+    // postal_code: Yup.string().required("Zip code is required"),
     state: Yup.string().required("State is required"),
-    postal_code: Yup.string().required("Zip code is required"),
-    ssn: Yup.string()
-        .required("SSN is required")
-        .matches(/^\d{4}$/, "Enter last 4 digits of SSN"),
+    // ssn: Yup.string().required("SSN is required"),
+    gender: Yup.string().required("Gender is required"),
     phone: Yup.string()
         .matches(/^\+?\d{7,15}$/, "Invalid phone number")
         .required("Phone is required"),
     password: isEdit
-        ? Yup.string().nullable() // not required in edit mode
+        ? Yup.string().nullable()
         : Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
     password_confirmation: Yup.string().when("password", {
-        is: (val: string) => !!val, // required only if password is filled
+        is: (val: string) => !!val,
         then: (schema) => schema.oneOf([Yup.ref("password")], "Passwords must match").required("Password confirmation is required"),
         otherwise: (schema) => schema.nullable(),
     }),
@@ -72,17 +71,15 @@ export default function AddPlayerPage({ id }: { id?: string }) {
             password_confirmation: data?.data.password_confirmation,
             profile_image: null,
             dob: data?.data.dob || null as Dayjs | null,
-            zip_code: data?.data.zip_code || "",
-            pob: data?.data.pob || "",
-            state: data?.data?.state,
-            postal_code: data?.data?.postal_code || "",
-            ssn: data?.data?.ssn || null,
+            postal_code: data?.data.postal_code || "",
+            state: data?.data.state || "",
+            gender: data?.data.gender || "",
+            address_line_two: data?.data.address_line_two || "",
+            ssn: data?.data.ssn || "",
         } : initialPlayerValues,
         validationSchema: PlayerValidationSchema(!!id),
         enableReinitialize: true,
         onSubmit: async (values) => {
-            const formattedDob = values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : '';
-
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("email", values.email);
@@ -94,9 +91,12 @@ export default function AddPlayerPage({ id }: { id?: string }) {
             if (values.address) formData.append("address", values.address);
             if (values.city) formData.append("city", values.city);
             if (values.phone) formData.append("phone", values.phone);
-            if (values.dob) formData.append("dob", formattedDob);
-            if (values.zip_code) formData.append("zip_code", values.zip_code);
-            if (values.pob) formData.append("pob", values.pob);
+            if (values.dob) formData.append("dob", values.dob.toString());
+            if (values.postal_code) formData.append("postal_code", values.postal_code);
+            if (values.state) formData.append("state", values.state);
+            if (values.gender) formData.append("gender", values.gender);
+            if (values.ssn) formData.append("ssn", values.ssn);
+            if (values.address_line_two) formData.append("address_line_two", values.address_line_two);
             if (values.profile_image) {
                 if (Array.isArray(values.profile_image)) {
                     values.profile_image.forEach((file) => formData.append("profile_image", file));
@@ -111,10 +111,10 @@ export default function AddPlayerPage({ id }: { id?: string }) {
 
             if (id) {
                 try {
-                    const response = await updatePlayer({ id: id, body: formData });
+                    const response = await updatePlayer({ id: id, body: formData }).unwrap();
                     dispatch(
                         showToast({
-                            message: response?.data?.message || "User Updated Successfully",
+                            message: response?.message || "User Updated Successfully",
                             variant: ToastVariant.SUCCESS
                         })
                     );
@@ -158,7 +158,7 @@ export default function AddPlayerPage({ id }: { id?: string }) {
                 <h2 className="text-[20px] leading-[140%] font-bold">Player Details</h2>
             </div>
 
-            <AddPlayerForm formik={formik} id={id} data={data} loading={isLoading || updating} />
+            <AddPlayerForm formik={formik} id={id} data={data} loading={isLoading || updating} isAdmin={true} />
         </div>
     )
 }

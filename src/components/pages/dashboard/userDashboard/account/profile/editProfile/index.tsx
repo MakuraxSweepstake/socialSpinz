@@ -73,24 +73,24 @@ export default function EditUserProfile({ id, buttonLabel }: { id: string, butto
             }
 
             try {
-                const response = await updateUserProfile({ id: user?.id || "", body: formData });
+                const response = await updateUserProfile({ id: user?.id || "", body: formData }).unwrap();
                 dispatch(
                     showToast({
-                        message: response?.data?.message || "Profile Updated Successfully",
+                        message: response?.message || "Profile Updated Successfully",
                         variant: ToastVariant.SUCCESS
                     })
                 );
                 dispatch(
                     setTokens({
                         access_token: access_token,
-                        user: { ...user, ...response?.data?.data },
+                        user: { ...user, ...response?.data },
                     }),
                 );
             }
             catch (e: any) {
                 dispatch(
                     showToast({
-                        message: e.error || e.data.message,
+                        message: e?.data?.message || "Unable to Update Profile",
                         variant: ToastVariant.ERROR
                     })
                 )

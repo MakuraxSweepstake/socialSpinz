@@ -1,13 +1,9 @@
-
-"use client";
 import BuyCoinGameListPage from '@/components/pages/dashboard/userDashboard/buyCoins';
-import { useGetAllGamesForUserQuery } from '@/services/gameApi';
-import { useGetUserGameBalanceQuery } from '@/services/transaction';
+import { getAllGames, getUserGameBalance } from '@/serverApi/game';
 
-export default function BuyCoins() {
-    const { data: games } = useGetAllGamesForUserQuery();
-    const { data: coins } = useGetUserGameBalanceQuery();
-
+export default async function BuyCoins() {
+    const games = await getAllGames();
+    const coins = await getUserGameBalance();
     return (
         <BuyCoinGameListPage games={games} coins={coins} />
     )

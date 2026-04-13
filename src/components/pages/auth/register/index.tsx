@@ -15,7 +15,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import * as Yup from 'yup';
 import AuthMessageBlock from '../authMessageBlock';
 
@@ -109,7 +108,7 @@ const validationSchema = Yup.object().shape({
 export default function RegisterPage() {
     const [registerUser, { isLoading }] = useRegisterUserMutation();
     const dispatch = useAppDispatch();
-    const [isAcuityModalOpen, setIsAcuityModalOpen] = useState(false);
+    // const [isAcuityModalOpen, setIsAcuityModalOpen] = useState(false);
     // const [acuityUrl, setAcuityUrl] = useState('');
     const route = useRouter();
     const initialValues = {

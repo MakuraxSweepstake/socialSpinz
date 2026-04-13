@@ -61,7 +61,6 @@ export default function GameCredentialsPage() {
                             <div className="col-span-1" key={cred.full_name}>
                                 <CredentialsCard
                                     cred={cred}
-
                                 />
                             </div>
                         ))

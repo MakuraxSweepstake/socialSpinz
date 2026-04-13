@@ -30,7 +30,7 @@ export const userApi = createApi({
                 url: `/api/credentials`,
                 method: "GET"
             }),
-            providesTags: ['user']
+            providesTags: ['user', "wallet"]
         }),
         changeUserGamePassword: builder.mutation<GlobalResponse, { password: string; confirm_password: string, name: string }>({
             query: ({ password, confirm_password, name }) => ({

@@ -35,7 +35,7 @@ export default function UpdatePassword() {
                 }).unwrap();
                 dispatch(
                     showToast({
-                        variant: ToastVariant.ERROR,
+                        variant: ToastVariant.SUCCESS,
                         message: response.message || "Something went wrong"
                     })
                 )

@@ -67,7 +67,6 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
-import ImportantBlock from '../molecules/ImportantBlock';
 import PaymentModal from '../molecules/PaymentModal';
 import Header from '../organism/Header';
 import Sidebar from '../organism/Sidebar';
@@ -123,7 +122,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     mb: { xs: '16px', lg: 0 }
                 }} />
                 <div className="content_box px-4 pt-4 pb-12 lg:pl-11 lg:pr-12 lg:pt-8 lg:pb-16">
-                    {user && user?.role && user?.role?.toLowerCase() === "user" && !user?.is_acuity_verified ? <ImportantBlock title='Profile Unverified' message='Your profile is not yet verified. Please complete the verification process.' onAction={async () => {
+                    {/* {user && user?.role && user?.role?.toLowerCase() === "user" && !user?.is_acuity_verified ? <ImportantBlock title='Profile Unverified' message='Your profile is not yet verified. Please complete the verification process.' onAction={async () => {
                         try {
                             const response = await verifyAcuity().unwrap();
                             dispatch(showToast({ message: 'Verification successful.', variant: ToastVariant.SUCCESS }));
@@ -135,7 +134,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         catch (err: any) {
                             dispatch(showToast({ message: err?.data?.message || 'Verification failed. Please try again.', variant: ToastVariant.ERROR }))
                         }
-                    }} actionText={isLoading ? 'Verifying...' : 'Verify Now'} /> : ""}
+                    }} actionText={isLoading ? 'Verifying...' : 'Verify Now'} /> : ""} */}
                     {children}
 
                     <PaymentModal

@@ -1,11 +1,9 @@
 import Avatar from '@/components/atom/Avatar';
 import { useAppDispatch, useAppSelector } from '@/hooks/hook';
 import { PATH } from '@/routes/PATH';
-import { useLogoutMutation } from '@/services/authApi';
 import { clearTokens } from '@/slice/authSlice';
-import { showToast, ToastVariant } from '@/slice/toastSlice';
-import { Box, ClickAwayListener, Fade, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Popper } from '@mui/material';
-import { ArrowDown2, Coin, Logout, MoneySend, Profile, Wallet2 } from "@wandersonalwes/iconsax-react";
+import { Box, ClickAwayListener, Fade, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Popper, Tooltip, Typography } from '@mui/material';
+import { ArrowDown2, CloseCircle, Coin, Logout, MoneySend, Profile, TickCircle, Wallet2 } from "@wandersonalwes/iconsax-react";
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
@@ -23,6 +21,7 @@ export default function ProfileBlock() {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const user = useAppSelector((state) => state?.auth.user);
+    const isVerified = user?.is_acuity_verified;
     const handleClose = (event: MouseEvent | TouchEvent) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
@@ -35,31 +34,10 @@ export default function ProfileBlock() {
         setOpen(false);
     }, [pathname, search])
 
-    const [logout] = useLogoutMutation();
-    const handleLogout = async (e: React.MouseEvent) => {
+    const handleLogout = (e: React.MouseEvent) => {
+        router.replace(PATH.AUTH.LOGIN.ROOT);
         e.preventDefault();
-
-        try {
-            await logout({}).unwrap();
-            dispatch(clearTokens());
-            showToast({
-                message: "Logout successful.",
-                variant: ToastVariant.SUCCESS,
-            })
-            router.replace("/dashboard");
-        }
-        catch (err) {
-            console.error("Logout failed:", err);
-            dispatch(
-                showToast({
-                    message: "Logout failed. Please try again.",
-                    variant: ToastVariant.ERROR,
-                })
-            )
-        }
-        finally {
-            router.replace(PATH.AUTH.LOGIN.ROOT);
-        }
+        dispatch(clearTokens());
     };
     const menuItems = [
         {
@@ -127,6 +105,27 @@ export default function ProfileBlock() {
     const handleMouseLeave = () => {
         setGlassStyle((prev) => ({ ...prev, opacity: 0 }));
     };
+
+    // const [getAgeGateUuid] = useGetAgeGateUuidMutation();
+
+    // const [isVerified, setIsVerified] = useState<boolean | null>(null);
+
+
+    // useEffect(() => {
+    //     const fetchAgeStatus = async () => {
+    //         try {
+    //             const res = await getAgeGateUuid().unwrap();
+    //             setIsVerified(res?.data?.is_age_verified);
+    //         } catch (e) {
+    //             console.log(e)
+    //             // console.error("Failed to fetch age verification status", err);
+    //             setIsVerified(false);
+    //         }
+    //     };
+
+    //     fetchAgeStatus();
+    // }, [getAgeGateUuid])
+
     return (
         <Box >
             <a
@@ -140,18 +139,29 @@ export default function ProfileBlock() {
                     padding: 0
                 }}
             >
-                <div className=' lg:flex items-center gap-1'>
-                    <Avatar alt="profile user" src={avataur1} />
-                    {user?.role && user.role.toLowerCase() !== "user" ? <>
-                        <div className=' hidden lg:block'>
-                            <strong className='text-[14px] leading-[120%] font-bold text-text-title block mb-1 text-nowrap'>{user?.name}</strong>
-                            <p className='text-[12px] text-left leading-[120%] font-[500] text-para-light text-nowrap'>
-                                {user?.role || "User"}
-                            </p>
+                <Tooltip title={isVerified ? "Verified" : "Not Verified"} placement="bottom">
+                    <div className=' lg:flex items-center gap-1 relative'>
+                        <Avatar alt="profile user" src={avataur1} />
+                        {user?.role && user.role.toLowerCase() !== "user" ? <>
+                            <div className=' hidden lg:block'>
+                                <strong className='text-[14px] leading-[120%] font-bold text-text-title block mb-1 text-nowrap'>{user?.name}</strong>
+                                <p className='text-[12px] text-left leading-[120%] font-[500] text-para-light text-nowrap'>
+                                    {user?.role || "User"}
+                                </p>
+                            </div>
+                            <ArrowDown2 size={14} className='text-primary hidden lg:block' />
+                        </> : ""}
+                        <div className="absolute bottom-0 right-0">
+                            {isVerified ? (
+                                <TickCircle variant="Bold" size={14} className="text-green-600" />
+                            ) : (
+                                <span className="flex items-center justify-center w-[14px] h-[14px] rounded-full bg-yellow-400 text-[10px] font-bold text-white">
+                                    !
+                                </span>
+                            )}
                         </div>
-                        <ArrowDown2 size={14} className='text-primary hidden lg:block' />
-                    </> : ""}
-                </div>
+                    </div>
+                </Tooltip>
             </a>
             <Popper
                 id={id}
@@ -166,7 +176,7 @@ export default function ProfileBlock() {
                         <Paper
                             elevation={3}
                             sx={{
-                                width: 215,
+                                width: 315,
                                 borderRadius: 2,
                                 mt: 1,
                             }}
@@ -219,6 +229,7 @@ export default function ProfileBlock() {
                                                     >
                                                         <ListItemIcon className="min-w-[30px] mr-1 group-hover:text-primary">{item.icon}</ListItemIcon>
                                                         <ListItemText primary={item.label} className='group-hover:text-primary' />
+
                                                     </Link> : <ListItemButton
                                                         href={item.href || ""}
                                                         onClick={item.onClick}
@@ -271,6 +282,25 @@ export default function ProfileBlock() {
                                                         >
                                                             <ListItemIcon className="min-w-[30px] mr-1 group-hover:text-primary">{item.icon}</ListItemIcon>
                                                             <ListItemText primary={item.label} className='group-hover:text-primary' />
+                                                            {item.label === "Profile" && (
+                                                                <div
+                                                                    className={`status flex flex-nowrap items-center gap-1 ml-auto p-1.5 rounded
+      ${isVerified
+                                                                            ? "bg-green-600/40 text-green-600"
+                                                                            : "bg-red-600/40 text-red-600"
+                                                                        }`}
+                                                                >
+                                                                    {isVerified ? (
+                                                                        <TickCircle variant="Bold" size={12} />
+                                                                    ) : (
+                                                                        <CloseCircle variant="Bold" size={12} />
+                                                                    )}
+
+                                                                    <Typography className="text-[10px]!">
+                                                                        {isVerified ? "Verified" : "Not Verified"}
+                                                                    </Typography>
+                                                                </div>
+                                                            )}
                                                         </Link> :
                                                         <ListItemButton
                                                             href={item.href || ""}
@@ -279,13 +309,13 @@ export default function ProfileBlock() {
                                                         >
                                                             <ListItemIcon className="min-w-[30px] mr-1 group-hover:text-primary">{item.icon}</ListItemIcon>
                                                             <ListItemText primary={item.label} className='group-hover:text-primary' />
+
                                                         </ListItemButton>}
                                                 </ListItem>
                                             ))}
                                         </List>
                                     )
                                 }
-
                             </ClickAwayListener>
                         </Paper>
                     </Fade>

@@ -1,17 +1,16 @@
 "use client";
 import GlassWrapper from '@/components/molecules/GlassWrapper';
 import { useAppSelector } from '@/hooks/hook';
-import EditIcon from '@/icons/EditIcon'
+import EditIcon from '@/icons/EditIcon';
 import { formatDateTime } from '@/utils/formatDateTime';
-import Image from 'next/image'
-import React from 'react'
+import Image from 'next/image';
 
 export default function UserProfileCard({ balance, loading }: { balance: any; loading?: boolean }) {
     const user = useAppSelector(state => state?.auth.user);
     const { date } = formatDateTime(user?.registered_date as string);
 
     return (
-        <GlassWrapper className="player__info text-center  rounded-xl lg:rounded-3xl p-4 lg:py-10 lg:px-9" >
+        <GlassWrapper className="player__info text-center  rounded-xl lg:rounded-3xl p-4 lg:py-10 lg:px-9 lg:sticky lg:top-0" >
             <div className="player__profile bg-primary-grad p-[1px] rounded-full max-w-fit mx-auto relative">
                 <Image src={user?.profile_image_file || "/assets/images/auth-image.png"} alt='' width={100} height={100} className=' aspect-square rounded-full border-[5px] border-solid border-white' />
                 <div className="absolute left-[50%] translate-x-[-50%] bottom-[-10px]">

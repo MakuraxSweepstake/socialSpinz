@@ -38,7 +38,7 @@ export default function AccountTab() {
     };
     return (
         <div className='profile__root'>
-            <div className="grid lg:grid-cols-12 gap-6">
+            <div className="grid lg:grid-cols-12 gap-6 items-start">
                 <div className="col-span-12 lg:col-span-5 ">
                     <UserProfileCard balance={data} loading={isLoading} />
                 </div>

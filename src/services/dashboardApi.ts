@@ -1,11 +1,7 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQuery } from "./baseQuery";
 import { AdminTrasactionResponse, AnalyticsResponse } from "@/types/dashboard";
+import { baseApi } from "./baseApi";
 
-export const dashboardApi = createApi({
-    reducerPath: "dashboardApi",
-    baseQuery: baseQuery,
-    tagTypes: ["Analytics", "Transactions"],
+const dashboardApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAnalytics: builder.query<AnalyticsResponse, { type: string }>({
             query: ({ type }) => ({
@@ -20,8 +16,8 @@ export const dashboardApi = createApi({
                 method: "GET",
             }),
             providesTags: ["Transactions"],
-        })
-    })
-})
+        }),
+    }),
+});
 
 export const { useGetAnalyticsQuery, useGetAdminTransactionsQuery } = dashboardApi;

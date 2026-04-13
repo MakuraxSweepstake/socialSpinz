@@ -37,8 +37,6 @@ export default function CredentialsCard({ cred }: { cred: CredentialsProps }) {
     const handleDialogClose = () => setOpenDialog(false);
     const balance = balanceData?.data || null;
 
-
-
     const [resetGamePassord, { isLoading }] = useChangeUserGamePasswordMutation();
     const dispatch = useAppDispatch();
 

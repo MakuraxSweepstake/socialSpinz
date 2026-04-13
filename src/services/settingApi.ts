@@ -1,49 +1,45 @@
 import { GlobalResponse } from "@/types/config";
 import { BannerResponseProps, SiteAvailabilityResponse, SiteAvailabilitySettings, SiteSettingResponseProps, TransactionLimitResponse, TransactionLimitSettings } from "@/types/setting";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQuery } from "./baseQuery";
+import { baseApi } from "./baseApi";
 
-export const settingApi = createApi({
-    reducerPath: "settingApi",
-    baseQuery: baseQuery,
-    tagTypes: ['settings', 'banners'],
+const settingApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         updateSetting: builder.mutation<GlobalResponse, FormData>({
             query: (body) => ({
                 url: "/api/admin/settings",
                 method: "POST",
-                body: body,
+                body,
             }),
-            invalidatesTags: ['settings']
+            invalidatesTags: ["settings"],
         }),
         getSettings: builder.query<SiteSettingResponseProps, void>({
             query: () => ({
                 url: "/api/admin/settings",
                 method: "GET",
             }),
-            providesTags: ['settings']
+            providesTags: ["settings"],
         }),
         updateBanner: builder.mutation<GlobalResponse, FormData>({
             query: (body) => ({
                 url: "/api/admin/setting/banner",
                 method: "POST",
-                body: body,
+                body,
             }),
-            invalidatesTags: ['banners']
+            invalidatesTags: ["banners"],
         }),
         getAllBanner: builder.query<BannerResponseProps, void>({
             query: () => ({
                 url: "/api/admin/setting/banner",
                 method: "GET",
             }),
-            providesTags: ['banners']
+            providesTags: ["banners"],
         }),
         getTransactionLimits: builder.query<TransactionLimitResponse, void>({
             query: () => ({
                 url: "/api/settings/transaction-limits",
                 method: "GET",
             }),
-            providesTags: ['settings']
+            providesTags: ["settings"],
         }),
         updateTransactionLimits: builder.mutation<GlobalResponse, TransactionLimitSettings>({
             query: (body) => ({
@@ -51,28 +47,25 @@ export const settingApi = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: ['settings']
+            invalidatesTags: ["settings"],
         }),
-
         getSiteAvailability: builder.query<SiteAvailabilityResponse, void>({
             query: () => ({
                 url: "/api/settings/site-availability",
                 method: "GET",
             }),
-            providesTags: ['settings']
+            providesTags: ["settings"],
         }),
-
         updateSiteAvailability: builder.mutation<GlobalResponse, SiteAvailabilitySettings>({
             query: (body) => ({
                 url: "/api/admin/settings/site-availability",
                 method: "POST",
                 body,
             }),
-            invalidatesTags: ['settings']
+            invalidatesTags: ["settings"],
         }),
-
-    })
-})
+    }),
+});
 
 export const {
     useUpdateSettingMutation,
@@ -83,5 +76,4 @@ export const {
     useUpdateTransactionLimitsMutation,
     useGetSiteAvailabilityQuery,
     useUpdateSiteAvailabilityMutation,
-
 } = settingApi;

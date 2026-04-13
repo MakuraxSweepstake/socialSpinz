@@ -1,38 +1,6 @@
-// import { createApi } from "@reduxjs/toolkit/query/react";
-// import { baseQuery } from "./baseQuery";
-// import { GlobalResponse } from "@/types/config";
+import { baseApi } from "./baseApi";
 
-// export const downloadApi = createApi({
-//     reducerPath: "downloadApi",
-//     baseQuery: baseQuery,
-//     tagTypes: ["Download"],
-//     endpoints: (builder) => ({
-//         downloadTransaction: builder.mutation<GlobalResponse, { user?: string; game?: string; search?: string }>({
-//             query: ({ user, game, search }) => {
-//                 const params = new URLSearchParams();
-//                 if (user) params.append('user', user.toString());
-//                 if (game) params.append('game', game.toString());
-//                 if (search) params.append('search', search.toString());
-//                 const queryString = params.toString();
-//                 return {
-//                     url: `/api/admin/download/transactions${queryString ? `?${queryString}` : ''}`,
-//                     method: "GET",
-//                 }
-//             }
-//         })
-//     })
-// })
-
-// export const { useDownloadTransactionMutation } = downloadApi;
-// src/services/downloadApi.ts
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { baseQuery } from "./baseQuery"; // your custom base query
-import { GlobalResponse } from "@/types/config";
-
-export const downloadApi = createApi({
-    reducerPath: "downloadApi",
-    baseQuery: baseQuery,
-    tagTypes: ["Download"],
+const downloadApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         downloadTransaction: builder.mutation<Blob, { user?: string; game?: string; search?: string; status?: string }>({
             async queryFn(args, _queryApi, _extraOptions, fetchWithBQ) {
@@ -46,7 +14,7 @@ export const downloadApi = createApi({
                 const response = await fetchWithBQ({
                     url: `/api/admin/download/transactions${queryString ? `?${queryString}` : ""}`,
                     method: "GET",
-                    responseHandler: async (response) => response.blob(), // ⬅️ handle blob here
+                    responseHandler: async (response) => response.blob(),
                 });
 
                 if (response.error) return { error: response.error };
@@ -63,7 +31,7 @@ export const downloadApi = createApi({
                 const response = await fetchWithBQ({
                     url: `/api/admin/download/users${queryString ? `?${queryString}` : ""}`,
                     method: "GET",
-                    responseHandler: async (response) => response.blob(), // ⬅️ handle blob here
+                    responseHandler: async (response) => response.blob(),
                 });
 
                 if (response.error) return { error: response.error };

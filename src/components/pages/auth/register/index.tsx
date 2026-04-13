@@ -14,7 +14,7 @@ import { ArrowLeft } from '@wandersonalwes/iconsax-react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useFormik } from 'formik';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
 import AuthMessageBlock from '../authMessageBlock';
 

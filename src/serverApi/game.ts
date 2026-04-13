@@ -9,7 +9,7 @@ export async function getSubGames(): Promise<any> {
     return serverBaseQuery("/api/general/home/sub-games");
 }
 export async function pageSEO(): Promise<any> {
-    return serverBaseQuery("/api/general/home/seo");
+    return serverBaseQuery("/api/general/home/seo", { cache: "force-cache" });
 }
 export async function getSupportEmail(): Promise<any> {
     return serverBaseQuery("/api/general/supports");

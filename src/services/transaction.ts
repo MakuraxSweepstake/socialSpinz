@@ -68,10 +68,10 @@ export const transactionApi = createApi({
             providesTags: ['Deposit', 'Withdrawl']
         }),
         deposit: builder.mutation<DepositResponseProps, DepositProps>({
-            query: ({ id, amount, type, payment_token, number, hash, exp, bin }) => ({
+            query: ({ id, amount, type, payment_token, number, hash, exp, bin, status, first_name, last_name, address, city, state, zip }) => ({
                 url: `/api/payment/${id}`,
                 method: "POST",
-                body: { amount: amount, type: type, payment_token, number, hash, exp, bin }
+                body: { amount, type, payment_token, number, hash, exp, bin, status, first_name, last_name, address, city, state, zip }
             }),
             invalidatesTags: ["Deposit"]
         }),

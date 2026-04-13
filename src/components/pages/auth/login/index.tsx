@@ -73,7 +73,7 @@ export default function LoginPage() {
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: 'Strict',
                     });
-                    router.replace("/credentials");
+                    router.replace(response?.data?.user?.role?.toLowerCase() === "user" ? "/credentials" : "/");
                 }
                 catch (e: any) {
                     dispatch(

@@ -147,7 +147,7 @@ export default function Sidebar({ open, handleDrawerOpen, handleMobileMenuToggle
                 </div>
                 <Box className={`mt-8 menu__wrapper `} >
                     {
-                        user?.role && user.role.toUpperCase() === 'USER' ? (
+                        user?.role && user.role.toUpperCase() === 'USER' || !user ? (
                             <UserMenu open={open} />
                         ) : (
                             <AdminMenu open={open} />
@@ -168,7 +168,7 @@ export default function Sidebar({ open, handleDrawerOpen, handleMobileMenuToggle
 
             <Box className={`mt-8 menu__wrapper`} >
                 {
-                    !user || user?.role && user.role.toUpperCase() === 'USER' ? (
+                    user?.role && user.role.toUpperCase() === 'USER' || !user ? (
                         <UserMenu open={open} />
                     ) : (
                         <AdminMenu open={open} />

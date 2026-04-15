@@ -14,7 +14,7 @@ export default function GameDetailPage() {
     const params = useParams();
     const id = params.slug;
     const [search, setSearch] = React.useState("");
-    const { data, isLoading } = useGetGameByIdQuery({ id: Number(id) })
+    const { data } = useGetGameByIdQuery({ id: Number(id) })
 
     const screenshots = data?.data?.screenshots || [];
 

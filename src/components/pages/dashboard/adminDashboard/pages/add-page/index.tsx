@@ -19,12 +19,12 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function AddPageForm({ id }: { id?: string }) {
-    const [createPage, { isLoading: creatingPage }
+    const [createPage,
     ] = useCreatePageMutation();
-    const { data, isLoading } = useGetSinlgePageByIdQuery({ id }, {
+    const { data } = useGetSinlgePageByIdQuery({ id }, {
         skip: !id
     })
-    const [updatedPage, { isLoading: updating }] = useUpdatePageByIdMutation();
+    const [updatedPage] = useUpdatePageByIdMutation();
 
     const dispatch = useAppDispatch();
     const router = useRouter();

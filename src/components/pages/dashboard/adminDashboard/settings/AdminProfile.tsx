@@ -1,12 +1,8 @@
 "use client";
 
-import ProfileBlock from '@/components/organism/Header/Profile'
 import { useAppSelector } from '@/hooks/hook';
 import EditIcon from '@/icons/EditIcon';
-import { formatDateTime } from '@/utils/formatDateTime';
-import { UserTick } from '@wandersonalwes/iconsax-react'
 import Image from 'next/image';
-import React from 'react'
 
 export default function AdminProfile() {
   const user = useAppSelector(state => state.auth.user)

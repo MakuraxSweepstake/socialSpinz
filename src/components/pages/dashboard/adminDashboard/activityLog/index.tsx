@@ -1,7 +1,5 @@
-import React from 'react'
-import ActivityAnalyticCard from './ActivityAnalyticCard'
-import Activities from './Activities'
 import PageHeader from '@/components/molecules/PageHeader'
+import Activities from './Activities'
 
 export default function ActivityLogPage() {
     return (

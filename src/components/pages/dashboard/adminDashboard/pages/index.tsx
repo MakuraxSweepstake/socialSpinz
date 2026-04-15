@@ -1,5 +1,6 @@
 "use client";
 import ActionGroup from '@/components/molecules/Action';
+import TablePaginationControls from '@/components/molecules/Pagination';
 import TableHeader from '@/components/molecules/TableHeader';
 import CustomTable from '@/components/organism/Table';
 import { useAppDispatch } from '@/hooks/hook';
@@ -8,22 +9,29 @@ import { useDeletePageByIdMutation, useGetAllPageQuery } from '@/services/pageAp
 import { showToast, ToastVariant } from '@/slice/toastSlice';
 import { PageRequestProps } from '@/types/page';
 import { formatDateTime } from '@/utils/formatDateTime';
-import { Checkbox, Pagination } from '@mui/material';
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import React, { useMemo, useState } from 'react'
+import { Checkbox } from '@mui/material';
+import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+import { useMemo, useState } from 'react';
+import React from 'react';
 
 export default function GeneralPageLiting() {
     const dispatch = useAppDispatch();
     const [search, setSearch] = useState("");
     const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
-    const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
-    const { data, isLoading: loadingPages } = useGetAllPageQuery({
-        pageIndex: pageIndex,
-        pageSize: pageSize,
-        search: search || ""
+    const [qp, setQp] = useState({
+        pageIndex: 1,
+        pageSize: 10,
     });
-    const [deletePage, { isLoading: deleting }] = useDeletePageByIdMutation();
+    const [customRange, setCustomRange] = React.useState({ startDate: "", endDate: "" });
+
+    const { data, isLoading: loadingPages } = useGetAllPageQuery({
+        pageIndex: qp.pageIndex,
+        pageSize: qp.pageSize,
+        search: search || "",
+        start_date: customRange.startDate || undefined,
+        end_date: customRange.endDate || undefined,
+    });
+    const [deletePage] = useDeletePageByIdMutation();
 
     const filteredData = useMemo(() => data?.data?.data || [], [data]);
 
@@ -73,7 +81,7 @@ export default function GeneralPageLiting() {
             accessorKey: 'registeredDate',
             header: 'Registered Date',
             cell: ({ row }) => {
-                const { date, time } = formatDateTime(row.original.date)
+                const { date } = formatDateTime(row.original.date)
                 return (
                     <span className="text-[12px] font-[500] max-w-[380px]">{date}</span>
                 )
@@ -106,8 +114,9 @@ export default function GeneralPageLiting() {
         state: { sorting },
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        // getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        manualPagination: true,
     })
 
     return (
@@ -116,31 +125,20 @@ export default function GeneralPageLiting() {
                 <TableHeader
                     search={search}
                     setSearch={setSearch}
-                // onDownloadCSV={() => { }}
+                    customRange={customRange}
+                    setCustomRange={setCustomRange}
                 />
                 <CustomTable
                     table={table}
                     loading={loadingPages}
                 />
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 px-8 py-6 gap-4">
-                    <div>
-                        <span>Row per page:</span>
-                        <select
-                            value={pageSize}
-                            onChange={(e) => setPageSize(Number(e.target.value))}
-                            className="ml-2 border border-gray-300 rounded p-1"
-                        >
-                            {[5, 10, 15, 20].map((size) => (
-                                <option key={size} value={size}>
-                                    {size}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <Pagination count={data?.data?.pagination?.total_pages || 1}
-                        page={pageIndex}
-                        onChange={(_, value) => setPageIndex(value)} variant="outlined" shape="rounded" sx={{ gap: "8px" }} />
-                </div>
+                {(data?.data?.pagination?.total_pages ?? 1) > 1 && (
+                    <TablePaginationControls
+                        qp={qp}
+                        setQp={setQp}
+                        totalPages={data?.data?.pagination?.total_pages || 1}
+                    />
+                )}
             </div>
         </section>
     )

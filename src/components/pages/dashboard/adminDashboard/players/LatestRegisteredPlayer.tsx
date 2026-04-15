@@ -8,11 +8,13 @@ import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table
 import { useMemo, useState } from 'react';
 
 export default function LatestRegisteredPlayer() {
-    const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize, setPageSize] = useState(6);
+    const [qp, _setQp] = useState({
+        pageIndex: 1,
+        pageSize: 10,
+    });
     const { data, isLoading: loadingPlayer } = useGetAllPlayerQuery({
-        pageIndex,
-        pageSize,
+        pageIndex: qp.pageIndex,
+        pageSize: qp.pageSize,
     });
 
     const columns = useMemo<ColumnDef<PlayerItem>[]>(() => [

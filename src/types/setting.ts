@@ -67,6 +67,13 @@ export interface BannerResponseProps {
     data: BannerProps[];
 }
 
+export interface ChatbotProps {
+    chatbot_link: string;
+    chatbot_image: File | null;
+    chatbot_image_url?: string;
+    chatbot_label: string;
+}
+
 export interface TransactionLimitSettings {
     min_deposit: number | null;
     max_deposit: number | null;

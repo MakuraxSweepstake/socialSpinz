@@ -1,5 +1,6 @@
 import { GlobalResponse } from "@/types/config";
 import { CredentialsResponseProps } from "@/types/game";
+import { CreateMissingAccountResponse, GetMissingAccountsResponse } from "@/types/missingAccounts";
 import { SinlgePlayerResponseProps, WalletProps } from "@/types/player";
 import { baseApi } from "./baseApi";
 
@@ -51,6 +52,20 @@ const userApi = baseApi.injectEndpoints({
             }),
             providesTags: ["user", "wallet"],
         }),
+        getMissingAccounts: builder.query<GetMissingAccountsResponse, void>({
+            query: () => ({
+                url: `/api/game/missing-accounts`,
+                method: "GET",
+            }),
+            providesTags: ["MissingAccounts"],
+        }),
+        createAccountForMissingGame: builder.mutation<CreateMissingAccountResponse, { game_slug: string }>({
+            query: ({ game_slug }) => ({
+                url: `/api/game/missing-accounts/${game_slug}`,
+                method: "POST",
+            }),
+            invalidatesTags: ["MissingAccounts", "user", "wallet"],
+        }),
     }),
 });
 
@@ -61,4 +76,6 @@ export const {
     useChangeUserGamePasswordMutation,
     useUpdateUserGamePasswordMutation,
     useGetGamesPasswordStatusQuery,
+    useGetMissingAccountsQuery,
+    useCreateAccountForMissingGameMutation,
 } = userApi;

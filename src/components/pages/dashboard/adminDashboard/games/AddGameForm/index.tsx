@@ -2,6 +2,8 @@
 import InputFile from "@/components/atom/InputFile";
 import SelectField from "@/components/atom/SelectField";
 import ReactQuillEditor from "@/components/molecules/ReactQuill";
+import MetaDescription from "@/components/organism/Meta";
+
 import { useAppDispatch } from "@/hooks/hook";
 import { PATH } from "@/routes/PATH";
 import { useAddGameMutation, useGetGameByIdQuery, useUpdateGameByIdMutation } from "@/services/gameApi";
@@ -32,7 +34,7 @@ export default function AddGameForm({ id }: AddGameFormProps) {
     const router = useRouter();
     const { data: gameProviders, isLoading } = useGetAllProviderQuery();
     const [addGame, { isLoading: addingGame }] = useAddGameMutation();
-    const { data, isLoading: loadingGameData } = useGetGameByIdQuery({ id: Number(id) }, { skip: !id })
+    const { data } = useGetGameByIdQuery({ id: Number(id) }, { skip: !id })
     const [updateGame, { isLoading: editing }] = useUpdateGameByIdMutation();
 
     const [serverFiles, setServerFiles] = React.useState<{
@@ -65,6 +67,7 @@ export default function AddGameForm({ id }: AddGameFormProps) {
             api: data.data?.api,
             provider: data.data?.provider,
             profit: data.data?.profit,
+            meta: data?.data?.meta
         } : gameInitialValues,
         validationSchema,
         enableReinitialize: true,
@@ -76,6 +79,20 @@ export default function AddGameForm({ id }: AddGameFormProps) {
             formData.append("description", values.description);
             formData.append("api", values.api);
             formData.append("provider", values.provider);
+            if (values.meta) {
+                if (values.meta.meta_title) {
+                    formData.append("meta[meta_title]", values.meta.meta_title);
+                }
+                if (values.meta.meta_description) {
+                    formData.append("meta[meta_description]", values.meta.meta_description);
+                }
+                if (values.meta.og_image) {
+                    formData.append("meta[og_image]", values.meta.og_image);
+                }
+                if (values.meta.og_image_url) {
+                    formData.append("meta[og_image_url]", values.meta.og_image_url);
+                }
+            }
             if (values.profit) formData.append("profit", values.profit);
 
             if (values.thumbnail instanceof File) {
@@ -153,14 +170,13 @@ export default function AddGameForm({ id }: AddGameFormProps) {
         }
     };
 
-
     return (
         <form onSubmit={formik.handleSubmit}>
+            <MetaDescription formik={formik} />
             <div className="form__field__wrapper border-solid border-[1px] border-gray rounded-[16px] mb-6">
                 <div className="form__title py-6 px-10 border-b-solid border-b-[1px] border-gray">
                     <h2 className="text-[20px] leading-[140%] font-bold">Overview of the Game</h2>
                 </div>
-
                 <div className="form__fields p-6 lg:p-10 flex flex-col gap-4 lg:gap-6 ">
                     {/* Name */}
                     <div className="input__field">
@@ -275,6 +291,7 @@ export default function AddGameForm({ id }: AddGameFormProps) {
                     </div>
                 </div>
             </div>
+
 
             {/* Game Configuration */}
             <div className="form__field__wrapper border-solid border-[1px] border-gray rounded-[16px]">

@@ -13,7 +13,7 @@ import * as Yup from "yup";
 
 export default function SiteSetting() {
     const dispatch = useAppDispatch();
-    const [updateSetting, { isLoading }] = useUpdateSettingMutation();
+    const [updateSetting] = useUpdateSettingMutation();
     const { data } = useGetSettingsQuery();
 
     const [serverFiles, setServerFiles] = React.useState({

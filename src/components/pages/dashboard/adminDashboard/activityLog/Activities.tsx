@@ -1,11 +1,12 @@
 "use client";
+import TablePaginationControls from '@/components/molecules/Pagination';
 import TableHeader from '@/components/molecules/TableHeader';
 import CustomTable from '@/components/organism/Table';
 import { useGetAllActivityQuery } from '@/services/notificationApi';
 import { StatusOptions } from '@/types/config';
 import { ActivityProps } from '@/types/notification';
-import { Box, Pagination } from '@mui/material';
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+import { Box } from '@mui/material';
+import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp } from '@wandersonalwes/iconsax-react';
 import React, { useMemo } from 'react';
 import { TransactionStatusProps } from '../transaction/TransactionTable';
@@ -23,26 +24,32 @@ export default function Activities() {
         { value: 'game_play', label: 'Games' },
         { value: 'profile_update', label: 'Profile Updates' },
         { value: 'bonus', label: 'Bonuses' },
-        { value: 'user', label: 'User' }
+        { value: 'user', label: 'User' },
+        { value: 'payment', label: 'Payment' }
     ];
 
 
+    const [qp, setQp] = React.useState({
+        pageIndex: 1,
+        pageSize: 10,
+    });
     const [search, setSearch] = React.useState("");
-    const [pageIndex, setPageIndex] = React.useState(1);
     const [status, setStatus] = React.useState<TransactionStatusProps | undefined>();
-    const [pageSize, setPageSize] = React.useState(10);
     const [activityType, setActivityType] = React.useState("");
     const [sorting, setSorting] = React.useState<any>([]);
-    // const [download, { isLoading: downloading }] = useStartDownloadMutation();
+    const [customRange, setCustomRange] = React.useState({ startDate: "", endDate: "" });
+
     const queryArgs = useMemo(
         () => ({
-            pageIndex: pageIndex,
-            pageSize: pageSize,
+            pageIndex: qp.pageIndex,
+            pageSize: qp.pageSize,
             search: search || "",
             activity_type: activityType,
-            status
+            status,
+            start_date: customRange.startDate || undefined,
+            end_date: customRange.endDate || undefined,
         }),
-        [pageIndex, pageSize, search, status, activityType]
+        [qp, search, status, activityType, customRange]
     );
 
 
@@ -149,50 +156,38 @@ export default function Activities() {
         state: { sorting },
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        // getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        manualPagination: true,
     });
 
 
     return (
         <div className="border-gray border-solid border-[1px] rounded-[8px] lg:rounded-[16px]">
             <TableHeader
-
                 search={search}
                 setSearch={setSearch}
                 filters={[
                     { value: activityType, setValue: setActivityType, options: activityTypes, placeholder: "Filter by type" },
                     { value: status || "", setValue: (value) => setStatus(value as TransactionStatusProps), options: StatusOptions, placeholder: "Filter by status" }
                 ]}
+                customRange={customRange}
+                setCustomRange={setCustomRange}
                 onDownloadCSV={() => { }}
             // downloading={downloading}
             />
 
             <CustomTable
-                key={`${pageIndex}-${pageSize}-${search}-${activityType}`}
+                key={`${qp.pageIndex}-${qp.pageSize}-${search}-${activityType}`}
                 table={table}
                 loading={isLoading}
             />
 
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 px-8 py-6 gap-4">
-                <div>
-                    <span>Row per page:</span>
-                    <select
-                        value={pageSize}
-                        onChange={(e) => setPageSize(Number(e.target.value))}
-                        className="ml-2 border border-gray-300 rounded p-1"
-                    >
-                        {[5, 10, 15, 20].map((size) => (
-                            <option key={size} value={size}>
-                                {size}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <Pagination count={data?.data?.pagination?.total_pages || 1}
-                    page={pageIndex}
-                    onChange={(_, value) => setPageIndex(value)} variant="outlined" shape="rounded" sx={{ gap: "8px" }} />
-            </div>
+            <TablePaginationControls
+                qp={qp}
+                setQp={setQp}
+                totalPages={data?.data?.pagination?.total_pages || 1}
+            />
         </div>
     );
 }

@@ -1,5 +1,6 @@
 import { GlobalResponse, QueryParams } from "@/types/config";
 import { PlayerListResponse, PlayerProps, SinlgePlayerResponseProps } from "@/types/player";
+import { buildQueryString } from "@/utils/buildQueryParams";
 import { baseApi } from "./baseApi";
 
 const playerApi = baseApi.injectEndpoints({
@@ -13,13 +14,8 @@ const playerApi = baseApi.injectEndpoints({
             invalidatesTags: [{ type: "Players", id: "LIST" }],
         }),
         getAllPlayer: builder.query<PlayerListResponse, QueryParams>({
-            query: ({ search, pageIndex, pageSize, status }) => {
-                const params = new URLSearchParams();
-                if (search) params.append("search", search);
-                if (pageIndex) params.append("page", pageIndex.toString());
-                if (pageSize) params.append("page_size", pageSize.toString());
-                if (status) params.append("status", status.toString());
-                const queryString = params.toString();
+            query: ({ search, pageIndex, pageSize, status, start_date, end_date }) => {
+                const queryString = buildQueryString({ search, page: pageIndex, page_size: pageSize, status, start_date, end_date });
                 return {
                     url: `/api/admin/get-users${queryString ? `?${queryString}` : ""}`,
                     method: "GET",

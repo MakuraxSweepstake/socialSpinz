@@ -1,15 +1,12 @@
 "use client"
 import CreditCard from '@/components/organism/Charts/CreditCard'
 import EditIcon from '@/icons/EditIcon'
-import { PATH } from '@/routes/PATH'
+import { useGetPlayerBalanceByIdQuery, useGetPlayerByIdQuery } from '@/services/playerApi'
+import { formatDateTime } from '@/utils/formatDateTime'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import TransactionTable from '../../transaction/TransactionTable'
-import { useAppSelector } from '@/hooks/hook'
-import { formatDateTime } from '@/utils/formatDateTime'
-import { useGetPlayerBalanceByIdQuery, useGetPlayerByIdQuery } from '@/services/playerApi'
-import TableHeader from '@/components/molecules/TableHeader'
 
 // const games = [
 //     {
@@ -63,7 +60,7 @@ const CreditCardShimmer = () => {
 };
 export default function PlayerDetailPage({ id }: { id: number }) {
     const [search, setSearch] = React.useState("");
-    const { data, isLoading } = useGetPlayerByIdQuery({ id }, {
+    const { data } = useGetPlayerByIdQuery({ id }, {
         skip: !id
     })
     const { data: userBalance, isLoading: loadingBalance } = useGetPlayerBalanceByIdQuery(
@@ -201,6 +198,7 @@ export default function PlayerDetailPage({ id }: { id: number }) {
                                     percentage: info.percentage,
                                     logo: info.game_logo,
                                     type: info.type,
+                                    username: info.name
                                 };
 
                                 return (

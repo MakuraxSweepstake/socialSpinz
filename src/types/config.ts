@@ -38,6 +38,8 @@ export interface QueryParams {
     pageSize?: number;
     search?: string;
     status?: string;
+    start_date?: string;
+    end_date?: string;
 }
 
 export const StatusOptions = [

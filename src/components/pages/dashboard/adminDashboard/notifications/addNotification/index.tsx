@@ -1,8 +1,7 @@
 import PageHeader from '@/components/molecules/PageHeader'
-import React from 'react'
 import AddNotificationForm from './AddNotificationForm'
 
-export default function NotificationFormRoot({ id }: { id?: string }) {
+export default function NotificationFormRoot() {
     return (
         <>
             <PageHeader

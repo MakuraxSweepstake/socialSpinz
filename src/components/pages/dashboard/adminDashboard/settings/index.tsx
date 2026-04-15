@@ -1,12 +1,13 @@
 "use client";
 
-import PageHeader from '@/components/molecules/PageHeader'
-import React, { useState } from 'react'
-import SiteSetting from './SiteSetting'
-import AdminProfile from './AdminProfile'
+import PageHeader from '@/components/molecules/PageHeader';
+import { useState } from 'react';
+import AdminProfile from './AdminProfile';
 import BannerSlider from './BannerSlider';
-import TransactionLimits from './TransactionLimits';
+import Chatbot from './Chatbot';
 import SiteAvailability from './SiteAvailability';
+import SiteSetting from './SiteSetting';
+import TransactionLimits from './TransactionLimits';
 
 export default function SettingPage() {
     // Track the active tab index
@@ -16,6 +17,7 @@ export default function SettingPage() {
         { title: "Site Settings", content: <SiteSetting /> },
         { title: "My Profile", content: <AdminProfile /> },
         { title: "Banner Slider", content: <BannerSlider /> },
+        { title: "Chatbot", content: <Chatbot /> },
         { title: "Transaction Limits", content: <TransactionLimits /> },
         { title: "Site Availability", content: <SiteAvailability /> },
     ];

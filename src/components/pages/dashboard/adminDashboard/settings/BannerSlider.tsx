@@ -31,8 +31,8 @@ const validationSchema = Yup.object({
 
 export default function BannerSlider() {
     const dispatch = useAppDispatch();
-    const { data, isLoading } = useGetAllBannerQuery();
-    const [updateBanner, { isLoading: updating }] = useUpdateBannerMutation();
+    const { data } = useGetAllBannerQuery();
+    const [updateBanner] = useUpdateBannerMutation();
 
     const formik = useFormik({
         initialValues: {

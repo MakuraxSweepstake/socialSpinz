@@ -1,5 +1,6 @@
-import { GlobalResponse } from "@/types/config";
+import { GlobalResponse, QueryParams } from "@/types/config";
 import { GameItem, GameResponseProps, SingleGameResponse } from "@/types/game";
+import { buildQueryString } from "@/utils/buildQueryParams";
 import { baseApi } from "./baseApi";
 
 const gameApi = baseApi.injectEndpoints({
@@ -12,11 +13,15 @@ const gameApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: [{ type: "Games", id: "LIST" }],
         }),
-        getAllGames: builder.query<GameResponseProps, void>({
-            query: () => ({
-                url: "/api/admin/games",
-                method: "GET",
-            }),
+        getAllGames: builder.query<GameResponseProps, QueryParams | void>({
+            query: (params = {}) => {
+                const { pageIndex, pageSize, search, start_date, end_date } = params as QueryParams;
+                const queryString = buildQueryString({ page: pageIndex, page_size: pageSize, search, start_date, end_date });
+                return {
+                    url: `/api/admin/games${queryString ? `?${queryString}` : ""}`,
+                    method: "GET",
+                };
+            },
             providesTags: (result) =>
                 result?.data?.data
                     ? [

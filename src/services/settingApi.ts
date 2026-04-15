@@ -1,5 +1,5 @@
 import { GlobalResponse } from "@/types/config";
-import { BannerResponseProps, SiteAvailabilityResponse, SiteAvailabilitySettings, SiteSettingResponseProps, TransactionLimitResponse, TransactionLimitSettings } from "@/types/setting";
+import { BannerResponseProps, ChatbotProps, SiteAvailabilityResponse, SiteAvailabilitySettings, SiteSettingResponseProps, TransactionLimitResponse, TransactionLimitSettings } from "@/types/setting";
 import { baseApi } from "./baseApi";
 
 const settingApi = baseApi.injectEndpoints({
@@ -33,6 +33,21 @@ const settingApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
             providesTags: ["banners"],
+        }),
+        updateChatbot: builder.mutation<GlobalResponse, FormData>({
+            query: (body) => ({
+                url: "/api/admin/setting/chatbot",
+                method: "POST",
+                body: body,
+            }),
+            invalidatesTags: ['Chatbot']
+        }),
+        getChatbotSetting: builder.query<{ data: ChatbotProps }, void>({
+            query: () => ({
+                url: "/api/setting/chatbot",
+                method: "GET",
+            }),
+            providesTags: ['Chatbot']
         }),
         getTransactionLimits: builder.query<TransactionLimitResponse, void>({
             query: () => ({
@@ -76,4 +91,6 @@ export const {
     useUpdateTransactionLimitsMutation,
     useGetSiteAvailabilityQuery,
     useUpdateSiteAvailabilityMutation,
+    useUpdateChatbotMutation,
+    useGetChatbotSettingQuery,
 } = settingApi;

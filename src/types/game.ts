@@ -1,3 +1,10 @@
+export interface MetaProps {
+    meta_title: string;
+    meta_description: string;
+    og_image: File | null;
+    og_image_url?: string;
+}
+
 export interface FileResponse {
     file_name: string;
     mime_type: string;
@@ -7,7 +14,7 @@ export interface FileResponse {
 export interface CommonGameProps {
     name: string;
     category?: string;
-
+    meta?: MetaProps,
     description: string;
     api: string;
     provider: string;

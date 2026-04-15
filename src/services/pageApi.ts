@@ -1,5 +1,6 @@
 import { GlobalResponse, QueryParams } from "@/types/config";
 import { PageListResponse, PageResponseProps } from "@/types/page";
+import { buildQueryString } from "@/utils/buildQueryParams";
 import { baseApi } from "./baseApi";
 
 const pageApi = baseApi.injectEndpoints({
@@ -13,10 +14,13 @@ const pageApi = baseApi.injectEndpoints({
             invalidatesTags: ["pages"],
         }),
         getAllPage: builder.query<PageListResponse, QueryParams>({
-            query: () => ({
-                url: "/api/admin/page/list",
-                method: "GET",
-            }),
+            query: ({ pageIndex, pageSize, search, start_date, end_date } = {}) => {
+                const queryString = buildQueryString({ page: pageIndex, page_size: pageSize, search, start_date, end_date });
+                return {
+                    url: `/api/admin/page/list${queryString ? `?${queryString}` : ""}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["pages"],
         }),
         getSinlgePageById: builder.query<PageResponseProps, { id: string | undefined }>({

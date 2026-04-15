@@ -1,7 +1,6 @@
 "use client";
 
 import { PATH } from "@/routes/PATH";
-import Link from "next/link";
 import {
     List,
     ListItem,
@@ -20,6 +19,7 @@ import {
     StatusUp,
     UserSearch,
 } from "@wandersonalwes/iconsax-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
@@ -160,7 +160,7 @@ export default function AdminMenu({ open }: { open: boolean }) {
                     >
                         <Link
                             href={href}
-                            className={`flex gap-2 items-start px-4 py-2 ${open ? "expanded" : "collapsed"
+                            className={`flex gap-2 items-center px-4 py-2 ${open ? "expanded" : "collapsed"
                                 } ${active ? "active__menu" : ""}`}
                         >
                             <ListItemIcon className={open ? "expanded" : "collapsed"}>

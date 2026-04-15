@@ -1,5 +1,6 @@
 "use client";
 import SortableHeader from '@/components/atom/SortableHeader';
+import TablePaginationControls from '@/components/molecules/Pagination';
 import TableHeader from '@/components/molecules/TableHeader';
 import CustomTable from '@/components/organism/Table';
 import { useAppDispatch } from '@/hooks/hook';
@@ -11,11 +12,10 @@ import { StatusOptions } from '@/types/config';
 import { SingleDepositProps } from '@/types/transaction';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { getInitials } from '@/utils/getInitials';
-import { Box, Pagination } from '@mui/material';
+import { Box } from '@mui/material';
 import {
     ColumnDef,
     getCoreRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable
 } from '@tanstack/react-table';
@@ -29,9 +29,11 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
     const dispatch = useAppDispatch();
 
     const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
-    const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
-    const [rowSelection, setRowSelection] = useState({});
+    const [qp, setQp] = useState({
+        pageIndex: 1,
+        pageSize: 10,
+    });
+    // const [rowSelection, setRowSelection] = useState({});
     const [status, setStatus] = React.useState<TransactionStatusProps | undefined>();
     const [selectedGame, setSelectedGame] = React.useState("");
     const [selectedTransactionType, setSelectedTransationType] = React.useState<TransactionTypeProps | string>("");
@@ -42,8 +44,8 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
 
     const queryArgs = useMemo(
         () => ({
-            pageIndex,
-            pageSize,
+            pageIndex: qp.pageIndex,
+            pageSize: qp.pageSize,
             search: search || "",
             game_id,
             user_id,
@@ -53,7 +55,7 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
             start_date: customRange.startDate,
             end_date: customRange.endDate
         }),
-        [pageIndex, pageSize, search, game_id, user_id, status, selectedGame, selectedTransactionType, customRange]
+        [qp, search, game_id, user_id, status, selectedGame, selectedTransactionType, customRange]
     );
 
     const { data, isLoading: loadingTransaction } = useGetAllTransactionQuery(queryArgs);
@@ -101,8 +103,8 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
             accessorKey: "status",
             header: ({ column }) => <SortableHeader column={column} label="Status" />,
             cell: ({ row }) => {
-                const status = row.original.status.toLowerCase();
-                const display = status.charAt(0).toUpperCase() + status.slice(1);
+                const status = row?.original?.status ? row.original?.status?.toLowerCase() : "";
+                const display = status?.charAt(0)?.toUpperCase() + status?.slice(1);
                 return (
                     <span className={`px-2 py-1 max-w-[60px] block lg: text-[10px] text-white status rounded-[8px] text-center ${status}`} > {display} </span >
                 );
@@ -110,11 +112,15 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
         },
         {
             accessorKey: "amount",
-            header: ({ column }) => <SortableHeader column={column} label="Amount USD" />,
+            header: ({ column }) => <SortableHeader column={column} label="Deposit Amount" />,
+        },
+        {
+            accessorKey: "gc",
+            header: ({ column }) => <SortableHeader column={column} label="GC Awarded" />,
         },
         {
             accessorKey: "sweepcoins",
-            header: ({ column }) => <SortableHeader column={column} label="Sweepcoins" />,
+            header: ({ column }) => <SortableHeader column={column} label="SC Bonus" />,
         },
         {
             accessorKey: "transaction_date",
@@ -139,12 +145,13 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
         // enableRowSelection: true,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        // getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         // onRowSelectionChange: setRowSelection,
+        manualPagination: true,
     });
 
-    const { data: games, isLoading } = useGetAllGamesQuery();
+    const { data: games } = useGetAllGamesQuery({});
 
 
 
@@ -222,28 +229,14 @@ export default function TransactionTable({ user_id, game_id, search, setSearch }
 
             <>
                 <CustomTable
-                    key={`${pageIndex}-${pageSize}-${search}-${game_id}-${user_id}`}
+                    key={`${qp.pageIndex}-${qp.pageSize}-${search}-${game_id}-${user_id}`}
                     table={table} loading={loadingTransaction} />
 
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 px-8 py-6 gap-4">
-                    <div>
-                        <span>Row per page:</span>
-                        <select
-                            value={pageSize}
-                            onChange={(e) => setPageSize(Number(e.target.value))}
-                            className="ml-2 border border-gray-300 rounded p-1"
-                        >
-                            {[5, 10, 15, 20].map((size) => (
-                                <option key={size} value={size}>
-                                    {size}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <Pagination count={data?.data?.pagination?.total_pages || 1}
-                        page={pageIndex}
-                        onChange={(_, value) => setPageIndex(value)} variant="outlined" shape="rounded" sx={{ gap: "8px" }} />
-                </div>
+                <TablePaginationControls
+                    qp={qp}
+                    setQp={setQp}
+                    totalPages={data?.data?.pagination?.total_pages || 1}
+                />
             </>
         </div>
     );

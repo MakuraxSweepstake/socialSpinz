@@ -1,12 +1,8 @@
 import { Box } from '@mui/material'
 import React from 'react'
 import Profile from '../Profile'
-import AdminSearchBar from '../AdminHeader/AdminSearchBar'
-import CoinCard from '@/components/molecules/CoinCard'
-import GoldCoinIcon from '@/icons/GoldCoinIcon'
-import SilverCoinIcon from '@/icons/SilverCoinIcon'
+import NotificationBell from '../Notification'
 import UserCoinCard from './UserCoinCard'
-import Private from '@/routes/Private'
 import { CheckAuth } from '@/utils/checkAuth'
 import Link from 'next/link'
 import { PATH } from '@/routes/PATH'
@@ -15,12 +11,10 @@ export default function UserHeader() {
   const isAuth = CheckAuth();
   return (
     <Box className='flex items-center gap-2 md:gap-4 justify-end w-full'>
-      {/* <AdminSearchBar /> */}
-
-
       {isAuth ?
         <div className="right flex items-center gap-4">
           <UserCoinCard />
+          <NotificationBell type="user" />
           <Profile />
         </div> :
         <div className="flex gap-3 items-center">

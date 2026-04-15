@@ -16,6 +16,7 @@ export const baseApi = createApi({
         "pages",
         "Menus",
         "Notification",
+        "UserNotification",
         "Activity",
         "PaymentSetup",
         "providers",

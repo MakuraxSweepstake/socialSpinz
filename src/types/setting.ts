@@ -67,11 +67,15 @@ export interface BannerResponseProps {
     data: BannerProps[];
 }
 
+export type ChatbotType = 'link' | 'script';
+
 export interface ChatbotProps {
-    chatbot_link: string;
-    chatbot_image: File | null;
-    chatbot_image_url?: string;
     chatbot_label: string;
+    chatbot_type: ChatbotType;
+    chatbot_link?: string;
+    chatbot_image?: File | null;
+    chatbot_image_url?: string;
+    chatbot_script_code?: string;
 }
 
 export interface TransactionLimitSettings {

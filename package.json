@@ -37,6 +37,7 @@
     "react-date-range": "^2.0.1",
     "react-dom": "^19.2.1",
     "react-dropzone": "^14.3.8",
+    "react-infinite-scroll-component": "^7.1.0",
     "react-quill-new": "3.4.6",
     "react-redux": "^9.2.0",
     "yup": "^1.7.0"

@@ -68,6 +68,7 @@ import { styled } from '@mui/material/styles';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import PaymentModal from '../molecules/PaymentModal';
+import ChatbotWidget from '../organism/ChatbotWidget';
 import Header from '../organism/Header';
 import Sidebar from '../organism/Sidebar';
 
@@ -136,6 +137,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         }
                     }} actionText={isLoading ? 'Verifying...' : 'Verify Now'} /> : ""} */}
                     {children}
+
+                    <ChatbotWidget />
 
                     <PaymentModal
                         url={acuityUrl}

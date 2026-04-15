@@ -76,7 +76,7 @@ export default function ChatbotWidget() {
     if (!label) return null;
 
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-1 right-2 lg:bottom-2 lg:right-4 z-50">
             <Button
                 className="max-w-fit px-8!"
                 variant="contained"

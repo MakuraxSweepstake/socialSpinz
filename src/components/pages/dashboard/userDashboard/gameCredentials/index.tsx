@@ -48,7 +48,7 @@ function AddGameModal({ open, onClose }: { open: boolean; onClose: () => void })
     const [createAccount, { isLoading: creating }] = useCreateAccountForMissingGameMutation();
 
     const games: MissingGame[] = data?.data || [];
-    const [selected, setSelected] = useState<string[]>([]); // stores game slugs (value)
+    const [selected, setSelected] = useState<string[]>([]);
 
     const toggle = (slug: string) => {
         setSelected((prev) =>

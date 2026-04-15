@@ -79,10 +79,10 @@ export default function TableHeader({
     const [showCustomRangeModal, setShowCustomRangeModal] = React.useState(false);
 
     const handleApplyCustomRange = () => {
-        if (startDate && endDate) {
+        if (startDate) {
             setCustomRange && setCustomRange({
                 startDate: startDate.format("YYYY-MM-DD"),
-                endDate: endDate.format("YYYY-MM-DD"),
+                endDate: endDate ? endDate.format("YYYY-MM-DD") : "",
             });
             setShowCustomRangeModal(false);
         }
@@ -91,6 +91,7 @@ export default function TableHeader({
     const handleResetCustomRange = () => {
         setStartDate(null);
         setEndDate(null);
+        setCustomRange && setCustomRange({ startDate: "", endDate: "" });
         setShowCustomRangeModal(false);
     };
 

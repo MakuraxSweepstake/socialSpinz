@@ -36,6 +36,7 @@ const CreditCard = ({ game }: { game: any }) => {
         <div className=" rounded-lg p-3 border border-gray">
             <Image src={game?.logo || "/assets/images/auth-image.png"} alt='' width={32} height={32} className='aspect-square rounded-sm' />
             <strong className="block text-[16px] leading-[120%] font-[600] tet-title mt-2 mb-3">{game?.name}</strong>
+            
             <div className="chart__wrapper mt-2 px-2 py-3" style={{
                 background: "rgba(184, 1, 192, 0.10)",
                 borderRadius: "4px"

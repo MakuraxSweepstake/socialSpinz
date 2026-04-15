@@ -19,6 +19,10 @@ export async function getUsp(): Promise<any> {
 }
 
 
+export async function getChatbotSetting(): Promise<any> {
+    return serverBaseQuery("/api/setting/chatbot", { cache: "no-store" });
+}
+
 export async function getUserGameBalance(): Promise<CredentialsResponseProps> {
     const cookieStore = await cookies();
     const access_token = cookieStore.get("access_token")?.value;

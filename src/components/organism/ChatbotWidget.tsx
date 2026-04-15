@@ -3,52 +3,20 @@
 import { useGetChatbotSettingQuery } from '@/services/settingApi';
 import { Button, Typography } from '@mui/material';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
 
 export default function ChatbotWidget() {
     const { data } = useGetChatbotSettingQuery();
-    const scriptInjected = useRef(false);
-
     const chatbot = data?.data;
-    const isScript = chatbot?.chatbot_type === 'script';
 
-    useEffect(() => {
-        if (!isScript || !chatbot?.chatbot_script_code || scriptInjected.current) return;
+    // Script mode — widget rendered by the injected script (see ChatbotScriptLoader in root layout)
+    if (chatbot?.chatbot_type === 'script') return null;
 
-        scriptInjected.current = true;
-
-        const container = document.createElement('div');
-        container.innerHTML = chatbot.chatbot_script_code;
-
-        const scripts = container.querySelectorAll('script');
-        scripts.forEach((originalScript) => {
-            const script = document.createElement('script');
-            Array.from(originalScript.attributes).forEach((attr) => {
-                script.setAttribute(attr.name, attr.value);
-            });
-            if (originalScript.textContent) {
-                script.textContent = originalScript.textContent;
-            }
-            document.head.appendChild(script);
-        });
-
-        return () => {
-            scripts.forEach((originalScript) => {
-                const id = originalScript.getAttribute('id');
-                if (id) document.getElementById(id)?.remove();
-            });
-        };
-    }, [isScript, chatbot?.chatbot_script_code]);
-
-    // Script mode — injected script renders its own widget
-    if (isScript) return null;
-
-    // Link mode — only show if both image and label are set
+    // Link mode — only show if label is set
     const fileUrl = chatbot?.chatbot_image_url;
     const label = chatbot?.chatbot_label;
     const isVideo = fileUrl?.toLowerCase().endsWith('.mp4');
 
-    if (!fileUrl || !label) return null;
+    if (!label) return null;
 
     return (
         <div className="fixed bottom-6 right-6 z-50">
@@ -63,7 +31,7 @@ export default function ChatbotWidget() {
                 sx={{ justifyContent: "start" }}
             >
                 <div className="w-full flex! justify-start! items-center! gap-4">
-                    {isVideo ? (
+                    {fileUrl && isVideo ? (
                         <video
                             autoPlay
                             loop
@@ -75,7 +43,7 @@ export default function ChatbotWidget() {
                         </video>
                     ) : (
                         <Image
-                            src={fileUrl}
+                            src={fileUrl ? fileUrl : ""}
                             alt="chatbot"
                             width={44}
                             height={44}

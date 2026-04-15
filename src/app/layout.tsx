@@ -3,6 +3,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
+import ChatbotScriptLoader from "./ChatbotScriptLoader";
 import "./globals.css";
 import ProviderWrapper from "./ProviderWrapper";
 import { SeonProvider } from "./SeonProvider";
@@ -67,6 +68,7 @@ export default function RootLayout({
           </ProviderWrapper>
         </SeonProvider>
       </body>
+      <ChatbotScriptLoader />
     </html>
   );
 }

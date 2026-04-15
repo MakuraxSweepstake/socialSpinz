@@ -113,7 +113,7 @@ function AddGameModal({ open, onClose }: { open: boolean; onClose: () => void })
             <DialogContent sx={{ p: 0 }}>
                 <div className="p-6">
                     {/* Header */}
-                    <h2 className="text-[22px] font-bold text-[#0E0E11] mb-1">Add New Game</h2>
+                    <h2 className="text-[22px] font-bold text-[#0E0E11] mb-1">Create Game Account</h2>
                     <p className="text-[13px] text-[#8A8A9E] mb-5">
                         Select either one or select up to two items
                     </p>
@@ -285,7 +285,7 @@ export default function GameCredentialsPage() {
                             <div className="w-[52px] h-[52px] rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <span className="text-white text-[28px] leading-none select-none">+</span>
                             </div>
-                            <span className="text-white text-[14px] font-[500]">Register New Game</span>
+                            <span className="text-white text-[14px] font-[500]">Create Game Account</span>
                         </button>
                     </div>
                 )}

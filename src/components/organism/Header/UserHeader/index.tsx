@@ -1,7 +1,6 @@
 import { Box } from '@mui/material'
 import React from 'react'
 import Profile from '../Profile'
-import NotificationBell from '../Notification'
 import UserCoinCard from './UserCoinCard'
 import { CheckAuth } from '@/utils/checkAuth'
 import Link from 'next/link'
@@ -14,7 +13,6 @@ export default function UserHeader() {
       {isAuth ?
         <div className="right flex items-center gap-4">
           <UserCoinCard />
-          <NotificationBell type="user" />
           <Profile />
         </div> :
         <div className="flex gap-3 items-center">

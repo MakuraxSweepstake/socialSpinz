@@ -12,6 +12,5 @@ export default function PrivateUserLayout({ children }: { children: React.ReactN
                 </DashboardLayout>
             </Private>
         </ComingSoonGate>
-
     )
 }

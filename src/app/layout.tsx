@@ -61,7 +61,6 @@ export default function RootLayout({
           <ProviderWrapper>
             <React.Suspense fallback={<div />}>
               <TopLoader />
-
             </React.Suspense>
             {children}
           </ProviderWrapper>
